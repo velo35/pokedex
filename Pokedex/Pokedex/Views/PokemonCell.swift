@@ -22,7 +22,7 @@ struct PokemonCell: View
                     .padding(.leading)
                 
                 HStack {
-                    Text(pokemon.type)
+                    Text("pokemon.type")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)

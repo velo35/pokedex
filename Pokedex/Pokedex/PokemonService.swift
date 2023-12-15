@@ -7,7 +7,14 @@
 
 import Foundation
 
-enum PSError: Error
+enum PSEntriesError: Error
+{
+    case request
+    case response
+    case decode
+}
+
+enum PSPokemonError: Error
 {
     case request
     case response
@@ -35,14 +42,28 @@ class PokemonService
     {
         let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=151")!
         guard let (data, response) = try? await URLSession.shared.data(from: url) else {
-            throw PSError.request
+            throw PSEntriesError.request
         }
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw PSError.response
+            throw PSEntriesError.response
         }
         guard let pokemonEntries = try? JSONDecoder().decode(PokemonEntries.self, from: data) else {
-            throw PSError.decode
+            throw PSEntriesError.decode
         }
         return pokemonEntries.results
+    }
+    
+    func getPokemon(for entry: PokemonEntry) async throws -> Pokemon
+    {
+        guard let (data, response) = try? await URLSession.shared.data(from: entry.url) else {
+            throw PSPokemonError.request
+        }
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw PSPokemonError.response
+        }
+        guard let pokemon = try? JSONDecoder().decode(Pokemon.self, from: data) else {
+            throw PSPokemonError.decode
+        }
+        return pokemon
     }
 }

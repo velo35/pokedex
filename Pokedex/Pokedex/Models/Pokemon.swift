@@ -7,18 +7,13 @@
 
 import Foundation
 
-struct Pokemon
+struct Pokemon: Identifiable, Codable
 {
+    let id: Int
     let name: String
-    let type: String
-    
-    init(name: String, type: String) {
-        self.name = name
-        self.type = type
-    }
 }
 
 extension Pokemon
 {
-    static let bulbasaur = Pokemon(name: "bulbasaur", type: "poison")
+    static let bulbasaur = Pokemon(id: 1, name: "bulbasaur")
 }
