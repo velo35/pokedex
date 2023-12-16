@@ -10,7 +10,7 @@ import SwiftUI
 struct PokemonCell: View 
 {
     let entry: PokemonEntry
-    var pokemon: Pokemon? = nil
+    @State var pokemon: Pokemon? = nil
     
     var body: some View
     {
@@ -23,7 +23,7 @@ struct PokemonCell: View
                     .padding(.leading)
                 
                 HStack {
-                    Text("pokemon.type")
+                    Text(pokemon?.type ?? "   ")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -46,7 +46,13 @@ struct PokemonCell: View
         .clipShape(.rect(cornerRadius: 12))
         .shadow(color: .green, radius: 6)
         .task {
-            
+            do {
+                pokemon = try PokemonService.shared.getPokemon(for: entry)
+            } catch PSPokemonError.decode(let reason) {
+                print("decode: \(reason)")
+            } catch {
+                print("other pokemon error")
+            }
         }
     }
 }

@@ -15,6 +15,7 @@
 		BE4FF6E02B2BD24C00DD2DEC /* PokedexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4FF6DF2B2BD24C00DD2DEC /* PokedexView.swift */; };
 		BE4FF6E22B2BD42F00DD2DEC /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4FF6E12B2BD42F00DD2DEC /* Pokemon.swift */; };
 		BE4FF6E42B2BD4DD00DD2DEC /* PokemonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4FF6E32B2BD4DD00DD2DEC /* PokemonService.swift */; };
+		BE63FD2B2B2E236B00531B99 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = BE63FD2A2B2E236B00531B99 /* SwiftyJSON */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE63FD2B2B2E236B00531B99 /* SwiftyJSON in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,6 +113,9 @@
 			dependencies = (
 			);
 			name = Pokedex;
+			packageProductDependencies = (
+				BE63FD2A2B2E236B00531B99 /* SwiftyJSON */,
+			);
 			productName = Pokedex;
 			productReference = BE4FF6CA2B2BC6CB00DD2DEC /* Pokedex.app */;
 			productType = "com.apple.product-type.application";
@@ -139,6 +144,9 @@
 				Base,
 			);
 			mainGroup = BE4FF6C12B2BC6CB00DD2DEC;
+			packageReferences = (
+				BE63FD292B2E236B00531B99 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+			);
 			productRefGroup = BE4FF6CB2B2BC6CB00DD2DEC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -376,6 +384,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BE63FD292B2E236B00531B99 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BE63FD2A2B2E236B00531B99 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE63FD292B2E236B00531B99 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BE4FF6C22B2BC6CB00DD2DEC /* Project object */;
 }

@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct Pokemon: Identifiable, Codable
+struct Pokemon
 {
-    let id: Int
     let name: String
     let type: String
+    let imageUrl: URL
 }
 
 extension Pokemon
 {
-    static let bulbasaur = Pokemon(id: 1, name: "bulbasaur", type: "poison")
+    static let bulbasaur = Pokemon(name: "bulbasaur", type: "poison", imageUrl: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png")!)
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 enum PSEntriesError: Error
 {
@@ -14,11 +15,11 @@ enum PSEntriesError: Error
     case decode
 }
 
-enum PSPokemonError: String, Error
+enum PSPokemonError: Error
 {
-    case request = "failed request"
-    case response = "failed response"
-    case decode = "failed decode"
+    case request
+    case response
+    case decode(String)
 }
 
 struct PokemonEntry: Codable
@@ -58,17 +59,18 @@ class PokemonService
         return pokemonEntries.results
     }
     
-    func getPokemon(for entry: PokemonEntry) async throws -> Pokemon
+    func getPokemon(for entry: PokemonEntry) throws -> Pokemon
     {
-        guard let (data, response) = try? await URLSession.shared.data(from: entry.url) else {
+        guard let string = try? String(contentsOf: entry.url) else {
             throw PSPokemonError.request
         }
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw PSPokemonError.response
-        }
-        guard let pokemon = try? JSONDecoder().decode(Pokemon.self, from: data) else {
-            throw PSPokemonError.decode
-        }
-        return pokemon
+        let json = JSON(parseJSON: string)
+        guard let name = json["name"].string else { throw PSPokemonError.decode("name") }
+        guard let type = json["types", 0, "type", "name"].string else { throw PSPokemonError.decode("type") }
+        guard let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { throw PSPokemonError.decode("image url") }
+//        else {
+//            throw PSPokemonError.decode
+//        }
+        return Pokemon(name: name, type: type, imageUrl: imageUrl)
     }
 }
