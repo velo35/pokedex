@@ -9,13 +9,14 @@ import SwiftUI
 
 struct PokemonCell: View 
 {
-    let pokemon: Pokemon
+    let entry: PokemonEntry
+    var pokemon: Pokemon? = nil
     
     var body: some View
     {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text(pokemon.name.capitalized)
+                Text(entry.name.capitalized)
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.top, 8)
@@ -44,9 +45,12 @@ struct PokemonCell: View
         .background(.green)
         .clipShape(.rect(cornerRadius: 12))
         .shadow(color: .green, radius: 6)
+        .task {
+            
+        }
     }
 }
 
 #Preview {
-    PokemonCell(pokemon: .bulbasaur)
+    PokemonCell(entry: .bulbasaur)
 }

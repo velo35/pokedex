@@ -14,11 +14,11 @@ enum PSEntriesError: Error
     case decode
 }
 
-enum PSPokemonError: Error
+enum PSPokemonError: String, Error
 {
-    case request
-    case response
-    case decode
+    case request = "failed request"
+    case response = "failed response"
+    case decode = "failed decode"
 }
 
 struct PokemonEntry: Codable
@@ -27,13 +27,18 @@ struct PokemonEntry: Codable
     let url: URL
 }
 
-struct PokemonEntries: Codable
+extension PokemonEntry
 {
-    let results: [PokemonEntry]
+    static let bulbasaur = PokemonEntry(name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
 }
 
 class PokemonService
 {
+    private struct PokemonEntries: Codable
+    {
+        let results: [PokemonEntry]
+    }
+    
     static let shared = PokemonService()
     
     private init() {}

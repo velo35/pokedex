@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PokedexView: View 
 {
-    @State private var pokemons = [Pokemon]()
+    @State private var pokemonEntries = [PokemonEntry]()
     
     private let gridItems: [GridItem] = [.init(.flexible()), .init(.flexible())]
     
@@ -18,8 +18,8 @@ struct PokedexView: View
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: gridItems, spacing: 16) {
-                    ForEach(pokemons) { pokemon in
-                        PokemonCell(pokemon: pokemon)
+                    ForEach(pokemonEntries, id: \.url) { entry in
+                        PokemonCell(entry: entry)
                     }
                 }
             }
@@ -27,11 +27,7 @@ struct PokedexView: View
         }
         .task {
             guard let pokemonEntries = try? await PokemonService.shared.getPokemonEntries() else { return }
-            for entry in pokemonEntries {
-                if let pokemon = try? await PokemonService.shared.getPokemon(for: entry) {
-                    pokemons.append(pokemon)
-                }
-            }
+            self.pokemonEntries = pokemonEntries
         }
     }
 }

@@ -11,9 +11,10 @@ struct Pokemon: Identifiable, Codable
 {
     let id: Int
     let name: String
+    let type: String
 }
 
 extension Pokemon
 {
-    static let bulbasaur = Pokemon(id: 1, name: "bulbasaur")
+    static let bulbasaur = Pokemon(id: 1, name: "bulbasaur", type: "poison")
 }
