@@ -47,7 +47,7 @@ struct PokemonCell: View
         .shadow(color: .green, radius: 6)
         .task {
             do {
-                pokemon = try PokemonService.shared.getPokemon(for: entry)
+                pokemon = try await PokemonService.shared.getPokemon(for: entry)
             } catch PSPokemonError.decode(let reason) {
                 print("decode: \(reason)")
             } catch {
