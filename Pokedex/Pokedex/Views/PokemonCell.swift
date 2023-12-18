@@ -12,6 +12,23 @@ struct PokemonCell: View
     let entry: PokemonEntry
     @State var pokemon: Pokemon? = nil
     
+    var color: Color
+    {
+        guard let type = pokemon?.type else { return .pink }
+        return switch type {
+            case "fire": .red
+            case "poison": .green
+            case "water": .blue
+            case "electric": .yellow
+            case "pyschic": .purple
+            case "normal": .orange
+            case "ground": .gray
+            case "flying": .teal
+            case "fairy": .pink
+            default: .indigo
+        }
+    }
+    
     var body: some View
     {
         ZStack {
@@ -54,9 +71,9 @@ struct PokemonCell: View
                 }
             }
         }
-        .background(.green)
+        .background(color)
         .clipShape(.rect(cornerRadius: 12))
-        .shadow(color: .green, radius: 6)
+        .shadow(color: color, radius: 6)
         .task {
             do {
                 pokemon = try await PokemonService.shared.getPokemon(for: entry)
