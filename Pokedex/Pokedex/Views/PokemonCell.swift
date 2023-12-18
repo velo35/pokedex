@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct PokemonCell: View 
 {
@@ -17,7 +18,8 @@ struct PokemonCell: View
         guard let type = pokemon?.type else { return .pink }
         return switch type {
             case "fire": .red
-            case "poison": .green
+            case "grass": .green
+            case "bug": .mint
             case "water": .blue
             case "electric": .yellow
             case "pyschic": .purple
@@ -51,12 +53,18 @@ struct PokemonCell: View
                         }
                         .frame(width: 100, height: 24)
                     
-                    AsyncImage(url: pokemon?.imageUrl) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    } placeholder: {
-                        ProgressView()
+                    LazyImage(url: pokemon?.imageUrl) { state in
+                        if let image = state.image {
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        }
+                        else if state.error != nil {
+                            Color.red
+                        }
+                        else {
+                            ProgressView()
+                        }
                     }
                     .frame(width: 68, height: 68)
                     .padding([.bottom, .trailing], 4)
