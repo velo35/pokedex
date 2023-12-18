@@ -16,6 +16,9 @@
 		BE4FF6E22B2BD42F00DD2DEC /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4FF6E12B2BD42F00DD2DEC /* Pokemon.swift */; };
 		BE4FF6E42B2BD4DD00DD2DEC /* PokemonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4FF6E32B2BD4DD00DD2DEC /* PokemonService.swift */; };
 		BE63FD2B2B2E236B00531B99 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = BE63FD2A2B2E236B00531B99 /* SwiftyJSON */; };
+		BE6D91482B30D3A400964BEB /* Siesta in Frameworks */ = {isa = PBXBuildFile; productRef = BE6D91472B30D3A400964BEB /* Siesta */; };
+		BE6D914A2B30D3A400964BEB /* SiestaUI in Frameworks */ = {isa = PBXBuildFile; productRef = BE6D91492B30D3A400964BEB /* SiestaUI */; };
+		BE6D914C2B30D3A400964BEB /* Siesta_Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BE6D914B2B30D3A400964BEB /* Siesta_Alamofire */; };
 		BEFA5C5D2B2FE6BD005D887E /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C5C2B2FE6BD005D887E /* Nuke */; };
 		BEFA5C5F2B2FE6BD005D887E /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C5E2B2FE6BD005D887E /* NukeExtensions */; };
 		BEFA5C612B2FE6BD005D887E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C602B2FE6BD005D887E /* NukeUI */; };
@@ -39,8 +42,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE6D914C2B30D3A400964BEB /* Siesta_Alamofire in Frameworks */,
 				BE63FD2B2B2E236B00531B99 /* SwiftyJSON in Frameworks */,
+				BE6D91482B30D3A400964BEB /* Siesta in Frameworks */,
 				BEFA5C5D2B2FE6BD005D887E /* Nuke in Frameworks */,
+				BE6D914A2B30D3A400964BEB /* SiestaUI in Frameworks */,
 				BEFA5C632B2FE6BD005D887E /* NukeVideo in Frameworks */,
 				BEFA5C5F2B2FE6BD005D887E /* NukeExtensions in Frameworks */,
 				BEFA5C612B2FE6BD005D887E /* NukeUI in Frameworks */,
@@ -127,6 +133,9 @@
 				BEFA5C5E2B2FE6BD005D887E /* NukeExtensions */,
 				BEFA5C602B2FE6BD005D887E /* NukeUI */,
 				BEFA5C622B2FE6BD005D887E /* NukeVideo */,
+				BE6D91472B30D3A400964BEB /* Siesta */,
+				BE6D91492B30D3A400964BEB /* SiestaUI */,
+				BE6D914B2B30D3A400964BEB /* Siesta_Alamofire */,
 			);
 			productName = Pokedex;
 			productReference = BE4FF6CA2B2BC6CB00DD2DEC /* Pokedex.app */;
@@ -159,6 +168,7 @@
 			packageReferences = (
 				BE63FD292B2E236B00531B99 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				BEFA5C5B2B2FE6BD005D887E /* XCRemoteSwiftPackageReference "Nuke" */,
+				BE6D91462B30D3A400964BEB /* XCRemoteSwiftPackageReference "siesta" */,
 			);
 			productRefGroup = BE4FF6CB2B2BC6CB00DD2DEC /* Products */;
 			projectDirPath = "";
@@ -407,6 +417,14 @@
 				minimumVersion = 5.0.1;
 			};
 		};
+		BE6D91462B30D3A400964BEB /* XCRemoteSwiftPackageReference "siesta" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bustoutsolutions/siesta";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.2;
+			};
+		};
 		BEFA5C5B2B2FE6BD005D887E /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
@@ -422,6 +440,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BE63FD292B2E236B00531B99 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		BE6D91472B30D3A400964BEB /* Siesta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE6D91462B30D3A400964BEB /* XCRemoteSwiftPackageReference "siesta" */;
+			productName = Siesta;
+		};
+		BE6D91492B30D3A400964BEB /* SiestaUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE6D91462B30D3A400964BEB /* XCRemoteSwiftPackageReference "siesta" */;
+			productName = SiestaUI;
+		};
+		BE6D914B2B30D3A400964BEB /* Siesta_Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE6D91462B30D3A400964BEB /* XCRemoteSwiftPackageReference "siesta" */;
+			productName = Siesta_Alamofire;
 		};
 		BEFA5C5C2B2FE6BD005D887E /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
