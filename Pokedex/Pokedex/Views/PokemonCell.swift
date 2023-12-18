@@ -40,34 +40,26 @@ struct PokemonCell: View
                     .padding(.leading)
                 
                 HStack {
-                    if let pokemon {
-                        Text(pokemon.type)
-                            .font(.subheadline.bold())
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .overlay {
-                                Capsule()
-                                    .fill(Color.white.opacity(0.25))
-                            }
-                            .frame(width: 100, height: 24)
-                        
-                        AsyncImage(url: pokemon.imageUrl) { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                        } placeholder: {
-                            ProgressView()
+                    Text(pokemon?.type ?? "")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .overlay {
+                            Capsule()
+                                .fill(Color.white.opacity(0.25))
                         }
-                        .frame(width: 68, height: 68)
-                        .padding([.bottom, .trailing], 4)
-                    }
+                        .frame(width: 100, height: 24)
                     
-//                    Image("bulbasaur")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 68, height: 68)
-//                        .padding([.bottom, .trailing], 4)
+                    AsyncImage(url: pokemon?.imageUrl) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .frame(width: 68, height: 68)
+                    .padding([.bottom, .trailing], 4)
                 }
             }
         }
@@ -80,7 +72,7 @@ struct PokemonCell: View
             } catch PSPokemonError.decode(let reason) {
                 print("decode: \(reason)")
             } catch {
-                print("other pokemon error")
+                print("other pokemon error: \(error.localizedDescription)")
             }
         }
     }
