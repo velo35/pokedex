@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Siesta
 import SwiftyJSON
 
 enum PSEntriesError: Error
@@ -33,7 +34,7 @@ extension PokemonEntry
     static let bulbasaur = PokemonEntry(name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
 }
 
-class PokemonService
+class PokemonService: Service
 {
     private struct PokemonEntries: Codable
     {
@@ -42,7 +43,24 @@ class PokemonService
     
     static let shared = PokemonService()
     
-    private init() {}
+    private init() 
+    {
+        super.init(baseURL: "https://pokeapi.co/api/v2")
+        
+        let decoder = JSONDecoder()
+        
+        configureTransformer("/pokemon", atStage: .parsing) {
+            try decoder.decode(PokemonEntries.self, from: $0.content)
+        }
+        
+        configureTransformer("/pokemon", atStage: .model) {
+            ($0.content as PokemonEntries).results
+        }
+        
+        SiestaLog.Category.enabled = .common
+    }
+    
+    var pokemonEntries: Resource { resource("/pokemon") }
     
     func getPokemonEntries() async throws -> [PokemonEntry]
     {
