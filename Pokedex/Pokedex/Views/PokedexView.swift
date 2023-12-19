@@ -19,7 +19,7 @@ struct PokedexView: View
             ScrollView {
                 LazyVGrid(columns: gridItems, spacing: 16) {
                     ForEach(viewModel.pokemonEntries, id: \.url) { entry in
-                        PokemonCell(entry: entry)
+                        PokemonCellView(entry: entry)
                     }
                 }
             }

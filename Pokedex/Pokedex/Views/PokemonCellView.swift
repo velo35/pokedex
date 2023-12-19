@@ -8,7 +8,7 @@
 import SwiftUI
 import NukeUI
 
-struct PokemonCell: View 
+struct PokemonCellView: View 
 {
     @State var viewModel: PokemonCellViewModel
     
@@ -82,5 +82,5 @@ struct PokemonCell: View
 }
 
 #Preview {
-    PokemonCell(entry: .bulbasaur)
+    PokemonCellView(entry: .bulbasaur)
 }
