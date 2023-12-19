@@ -10,12 +10,16 @@ import NukeUI
 
 struct PokemonCell: View 
 {
-    let entry: PokemonEntry
-    @State var pokemon: Pokemon? = nil
+    @State var viewModel: PokemonCellViewModel
+    
+    init(entry: PokemonEntry)
+    {
+        self.viewModel = PokemonCellViewModel(entry)
+    }
     
     var color: Color
     {
-        guard let type = pokemon?.type else { return .pink }
+        guard let type = viewModel.type else { return .pink }
         return switch type {
             case "fire": .red
             case "grass": .green
@@ -35,14 +39,14 @@ struct PokemonCell: View
     {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text(entry.name.capitalized)
+                Text(viewModel.name.capitalized)
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.top, 8)
                     .padding(.leading)
                 
                 HStack {
-                    Text(pokemon?.type ?? "")
+                    Text(viewModel.type ?? "")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -53,7 +57,7 @@ struct PokemonCell: View
                         }
                         .frame(width: 100, height: 24)
                     
-                    LazyImage(url: pokemon?.imageUrl) { state in
+                    LazyImage(url: viewModel.imageUrl) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -74,15 +78,6 @@ struct PokemonCell: View
         .background(color)
         .clipShape(.rect(cornerRadius: 12))
         .shadow(color: color, radius: 6)
-        .task {
-            do {
-                pokemon = try await PokemonService.shared.getPokemon(for: entry)
-            } catch PSPokemonError.decode(let reason) {
-                print("decode: \(reason)")
-            } catch {
-                print("other pokemon error: \(error.localizedDescription)")
-            }
-        }
     }
 }
 
