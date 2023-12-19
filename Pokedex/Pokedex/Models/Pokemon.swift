@@ -41,11 +41,17 @@ extension PokemonType
     }
 }
 
-struct Pokemon
+@Observable class Pokemon
 {
     let name: String
     let type: PokemonType
     let imageUrl: URL
+    
+    init(name: String, type: PokemonType, imageUrl: URL) {
+        self.name = name
+        self.type = type
+        self.imageUrl = imageUrl
+    }
 }
 
 extension Pokemon

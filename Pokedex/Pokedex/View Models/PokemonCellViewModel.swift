@@ -29,13 +29,11 @@ extension PokemonCellViewModel: ResourceObserver
         setInfo(resource.typedContent())
     }
     
-    func setInfo(_ json: JSON?)
+    func setInfo(_ pokemon: Pokemon?)
     {
-        guard let json,
-              let type = json["types", 0, "type", "name"].string,
-              let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { return }
+        guard let pokemon else { return }
         
-        self.type = PokemonType(rawValue: type)
-        self.imageUrl = imageUrl
+        self.type = pokemon.type
+        self.imageUrl = pokemon.imageUrl
     }
 }

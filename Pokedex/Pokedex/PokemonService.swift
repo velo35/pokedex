@@ -47,6 +47,15 @@ class PokemonService: Service
             try JSON(data: $0.content)
         }
         
+        configureTransformer("/api/v2/pokemon/*", atStage: .model) { entity -> Pokemon? in
+            let json: JSON = entity.content
+            guard let name = json["name"].string,
+                  let typeString = json["types", 0, "type", "name"].string,
+                  let type = PokemonType(rawValue: typeString),
+                  let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { return nil }
+            return Pokemon(name: name, type: type, imageUrl: imageUrl)
+        }
+        
 //        SiestaLog.Category.enabled = .all
     }
     
