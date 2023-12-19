@@ -17,23 +17,7 @@ struct PokemonCellView: View
         self.viewModel = PokemonCellViewModel(entry)
     }
     
-    var color: Color
-    {
-        guard let type = viewModel.type else { return .pink }
-        return switch type {
-            case "fire": .red
-            case "grass": .green
-            case "bug": .mint
-            case "water": .blue
-            case "electric": .yellow
-            case "pyschic": .purple
-            case "normal": .orange
-            case "ground": .gray
-            case "flying": .teal
-            case "fairy": .pink
-            default: .indigo
-        }
-    }
+    var color: Color { viewModel.type?.color ?? .indigo }
     
     var body: some View
     {
@@ -46,7 +30,7 @@ struct PokemonCellView: View
                     .padding(.leading)
                 
                 HStack {
-                    Text(viewModel.type ?? "")
+                    Text(viewModel.type?.rawValue ?? "")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)

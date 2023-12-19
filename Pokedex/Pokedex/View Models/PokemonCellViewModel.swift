@@ -12,7 +12,7 @@ import SwiftyJSON
 @Observable class PokemonCellViewModel
 {
     let name: String
-    var type: String?
+    var type: PokemonType?
     var imageUrl: URL?
     
     init(_ entry: PokemonEntry) 
@@ -35,7 +35,7 @@ extension PokemonCellViewModel: ResourceObserver
               let type = json["types", 0, "type", "name"].string,
               let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { return }
         
-        self.type = type
+        self.type = PokemonType(rawValue: type)
         self.imageUrl = imageUrl
     }
 }
