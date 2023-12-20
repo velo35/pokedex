@@ -22,25 +22,6 @@ enum PokemonType: String
     case fairy
 }
 
-extension PokemonType
-{
-    var color: Color
-    {
-        switch self {
-            case .fire: .red
-            case .grass: .green
-            case .bug: .mint
-            case .water: .blue
-            case .electric: .yellow
-            case .pyschic: .purple
-            case .normal: .orange
-            case .ground: .gray
-            case .flying: .teal
-            case .fairy: .pink
-        }
-    }
-}
-
 @Observable class Pokemon
 {
     let name: String

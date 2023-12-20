@@ -12,16 +12,25 @@ struct PokedexView: View
     @Namespace var animation
     @State private var viewModel = PokedexViewModel()
     @State private var selected: PokemonEntry?
+    @State private var typeFilter: PokemonType?
     
     private let gridItems: [GridItem] = [.init(.flexible()), .init(.flexible())]
+    
+    var pokemonEntries: [PokemonEntry]
+    {
+        guard let typeFilter else { return viewModel.pokemonEntries }
+        return viewModel.pokemonEntries.filter { entry in
+            (PokemonService.shared.pokemon(for: entry).latestData?.content as? Pokemon)?.type == typeFilter
+        }
+    }
     
     var body: some View
     {
         NavigationStack {
-            ZStack {
+            ZStack(alignment: .bottomTrailing) {
                 ScrollView {
                     LazyVGrid(columns: gridItems, spacing: 16) {
-                        ForEach(viewModel.pokemonEntries, id: \.url) { entry in
+                        ForEach(pokemonEntries, id: \.url) { entry in
                             PokemonCellView(entry: entry)
                                 .onTapGesture {
                                     withAnimation {
@@ -32,12 +41,11 @@ struct PokedexView: View
                         }
                     }
                 }
-                .navigationTitle("Pokemon")
                 
-                if let selected {
-                    
-                }
+                TypeFilterView(typeFilter: $typeFilter)
+                    .padding([.bottom, .trailing])
             }
+            .navigationTitle("Pokemon")
         }
     }
 }
