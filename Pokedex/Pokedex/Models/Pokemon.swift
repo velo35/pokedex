@@ -10,16 +10,26 @@ import SwiftUI
 
 enum PokemonType: String
 {
-    case fire
-    case grass
-    case bug
-    case water
-    case electric
-    case pyschic
     case normal
-    case ground
+    case fighting
     case flying
+    case poison
+    case ground
+    case rock
+    case bug
+    case ghost
+    case steel
+    case fire
+    case water
+    case grass
+    case electric
+    case psychic
+    case ice
+    case dragon
+    case dark
     case fairy
+    case unknown
+    case shadow
 }
 
 @Observable class Pokemon

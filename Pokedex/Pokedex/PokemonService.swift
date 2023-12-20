@@ -49,17 +49,17 @@ class PokemonService: Service
         
         configureTransformer("/api/v2/pokemon/*", atStage: .model) { entity -> Pokemon? in
             let json: JSON = entity.content
-            guard let name = json["name"].string,
-                  let typeString = json["types", 0, "type", "name"].string,
-                  let type = PokemonType(rawValue: typeString),
-                  let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { return nil }
+            guard let name = json["name"].string else { fatalError("name") }
+            guard let typeString = json["types", 0, "type", "name"].string  else { fatalError("\(name): typeString") }
+            guard let type = PokemonType(rawValue: typeString)  else { fatalError("\(name): type") }
+            guard let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { fatalError("\(name): image") }
             return Pokemon(name: name, type: type, imageUrl: imageUrl)
         }
         
 //        SiestaLog.Category.enabled = .all
     }
     
-    var pokemonEntries: Resource { resource("/api/v2/pokemon") }
+    var pokemonEntries: Resource { resource("/api/v2/pokemon").withParam("limit", "151") }
     
     func pokemon(for entry: PokemonEntry) -> Resource { resource(entry.url.path) }
 }

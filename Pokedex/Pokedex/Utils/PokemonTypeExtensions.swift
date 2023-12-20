@@ -24,11 +24,12 @@ extension PokemonType
             case .bug: .mint
             case .water: .blue
             case .electric: .yellow
-            case .pyschic: .purple
+            case .psychic: .purple
             case .normal: .orange
             case .ground: .gray
             case .flying: .teal
             case .fairy: .pink
+            default: .black
         }
     }
     
