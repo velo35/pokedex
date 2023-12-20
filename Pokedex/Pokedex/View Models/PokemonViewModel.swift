@@ -9,11 +9,10 @@ import Foundation
 import Siesta
 import SwiftyJSON
 
-@Observable class PokemonCellViewModel
+@Observable class PokemonViewModel
 {
     let name: String
-    var type: PokemonType?
-    var imageUrl: URL?
+    fileprivate(set) var pokemon: Pokemon?
     
     init(_ entry: PokemonEntry) 
     {
@@ -22,18 +21,10 @@ import SwiftyJSON
     }
 }
 
-extension PokemonCellViewModel: ResourceObserver
+extension PokemonViewModel: ResourceObserver
 {
     func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent) 
     {
-        setInfo(resource.typedContent())
-    }
-    
-    func setInfo(_ pokemon: Pokemon?)
-    {
-        guard let pokemon else { return }
-        
-        self.type = pokemon.type
-        self.imageUrl = pokemon.imageUrl
+        self.pokemon = resource.typedContent()
     }
 }

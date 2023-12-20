@@ -47,6 +47,9 @@ struct PokedexView: View
             }
             .navigationTitle("Pokemon")
         }
+        .sheet(item: $selected) { entry in
+            PokemonDetailView(entry: entry)
+        }
     }
 }
 

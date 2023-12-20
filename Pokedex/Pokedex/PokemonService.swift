@@ -9,10 +9,12 @@ import Foundation
 import Siesta
 import SwiftyJSON
 
-struct PokemonEntry: Codable
+struct PokemonEntry: Identifiable, Codable
 {
     let name: String
     let url: URL
+    
+    var id: URL { url }
 }
 
 extension PokemonEntry

@@ -10,14 +10,14 @@ import NukeUI
 
 struct PokemonCellView: View 
 {
-    @State var viewModel: PokemonCellViewModel
+    @State var viewModel: PokemonViewModel
     
     init(entry: PokemonEntry)
     {
-        self.viewModel = PokemonCellViewModel(entry)
+        self.viewModel = PokemonViewModel(entry)
     }
     
-    var color: Color { viewModel.type?.color ?? .indigo }
+    var color: Color { viewModel.pokemon?.type.color ?? .indigo }
     
     var body: some View
     {
@@ -30,7 +30,7 @@ struct PokemonCellView: View
                     .padding(.leading)
                 
                 HStack {
-                    Text(viewModel.type?.rawValue ?? "")
+                    Text(viewModel.pokemon?.type.rawValue ?? "")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -41,7 +41,7 @@ struct PokemonCellView: View
                         }
                         .frame(width: 100, height: 24)
                     
-                    LazyImage(url: viewModel.imageUrl) { state in
+                    LazyImage(url: viewModel.pokemon?.imageUrl) { state in
                         if let image = state.image {
                             image
                                 .resizable()

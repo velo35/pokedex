@@ -9,7 +9,12 @@ import SwiftUI
 
 struct PokemonDetailView: View 
 {
-    let pokemon: Pokemon
+    @State var viewModel: PokemonViewModel
+    
+    init(entry: PokemonEntry)
+    {
+        self.viewModel = PokemonViewModel(entry)
+    }
     
     var body: some View
     {
@@ -17,12 +22,12 @@ struct PokemonDetailView: View
             ZStack {
                 
             }
-            .background(pokemon.type.color)
+//            .background(pokemon.type.color)
             
         }
     }
 }
 
 #Preview {
-    PokemonDetailView(pokemon: .bulbasaur)
+    PokemonDetailView(entry: .bulbasaur)
 }
