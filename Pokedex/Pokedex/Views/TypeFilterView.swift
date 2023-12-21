@@ -14,56 +14,62 @@ struct TypeFilterView: View
     
     private let typeFilters: [PokemonType] = [.fire, .grass, .water, .electric]
     
-    var image: some View
-    {
-        Image(systemName: typeFilter == nil ? "line.3.horizontal.decrease.circle.fill" : "arrow.counterclockwise.circle.fill")
-            .renderingMode(.original)
-            .font(.system(size: 45))
-            .foregroundStyle(.purple)
-            .shadow(color: .black, radius: 5)
-            .rotationEffect(.degrees(typeFilter == nil && typeFiltersShown ? 180 : 0))
-            .animation(typeFilter == nil ? .default : nil, value: typeFiltersShown)
-            .padding(.top, 5)
-    }
-    
     var body: some View
     {
-        VStack(alignment: .center) {
-            VStack(spacing: 6) {
-                ForEach(typeFilters) { type in
-                    Button {
-                        typeFilter = type
-                        print("hi")
-                    } label: {
-                        type.image
-                            .renderingMode(.original)
-                            .font(.system(size: 35))
-                            .foregroundStyle(type.color)
-                            .shadow(color: .black.opacity(0.5), radius: 5)
+        ZStack {
+            VStack {
+                VStack(spacing: 6) {
+                    ForEach(typeFilters) { type in
+                        Button {
+                            typeFilter = type
+                            print("hi")
+                        } label: {
+                            type.image
+                                .renderingMode(.original)
+                                .font(.system(size: 35))
+                                .foregroundStyle(type.color)
+                                .shadow(color: .black.opacity(0.5), radius: 5)
+                        }
                     }
                 }
             }
-            
-            
-            if typeFilter == nil {
-                image
-                    .onTapGesture {
+            .padding([.horizontal, .top])
+            .padding(.bottom, 36)
+            .offset(y: typeFiltersShown ? 0 : 190)
+            .clipped()
+        }
+        .overlay(alignment: .bottom) {
+            Image(systemName: typeFilter == nil ? "line.3.horizontal.decrease.circle.fill" : "arrow.counterclockwise.circle.fill")
+                .renderingMode(.original)
+                .font(.system(size: 45))
+                .foregroundStyle(.purple)
+                .shadow(color: .black, radius: 5)
+                .rotationEffect(.degrees(typeFilter == nil && typeFiltersShown ? 180 : 0))
+                .animation(typeFilter == nil ? .default : nil, value: typeFiltersShown)
+                .offset(y: 22)
+                .onTapGesture {
+                    withAnimation {
                         typeFiltersShown.toggle()
                     }
-            }
-            else {
-                Button {
-                    typeFilter = nil
-                } label: {
-                    image
                 }
-            }
-                
         }
     }
 }
 
+struct StatefulPreviewWrapper<Value, Content: View>: View {
+    @State var value: Value
+    var content: (Binding<Value>) -> Content
+
+    var body: some View {
+        content($value)
+    }
+
+    init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
+        self._value = State(wrappedValue: value)
+        self.content = content
+    }
+}
+
 #Preview {
-    @State var typeFilter: PokemonType?
-    return TypeFilterView(typeFilter: $typeFilter)
+    StatefulPreviewWrapper(nil) { TypeFilterView(typeFilter: $0) }
 }

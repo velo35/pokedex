@@ -44,6 +44,7 @@ struct PokedexView: View
                 
                 TypeFilterView(typeFilter: $typeFilter)
                     .padding([.bottom, .trailing])
+                    .padding([.bottom])
             }
             .navigationTitle("Pokemon")
         }
