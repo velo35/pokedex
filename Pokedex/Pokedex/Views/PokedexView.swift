@@ -16,7 +16,7 @@ struct PokedexView: View
     
     private let gridItems: [GridItem] = [.init(.flexible()), .init(.flexible())]
     
-    var pokemonEntries: [PokemonEntry]
+    var filteredPokemonEntries: [PokemonEntry]
     {
         guard let typeFilter else { return viewModel.pokemonEntries }
         return viewModel.pokemonEntries.filter { entry in
@@ -30,7 +30,7 @@ struct PokedexView: View
             ZStack(alignment: .bottomTrailing) {
                 ScrollView {
                     LazyVGrid(columns: gridItems, spacing: 16) {
-                        ForEach(pokemonEntries, id: \.url) { entry in
+                        ForEach(filteredPokemonEntries, id: \.url) { entry in
                             PokemonCellView(entry: entry)
                                 .onTapGesture {
                                     withAnimation {
@@ -39,6 +39,9 @@ struct PokedexView: View
                                 }
                                 .matchedGeometryEffect(id: entry.name, in: animation)
                         }
+                    }
+                    Button("Load More") {
+                        viewModel.fetchMore()
                     }
                 }
                 

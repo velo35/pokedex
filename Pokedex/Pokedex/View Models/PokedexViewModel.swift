@@ -11,10 +11,17 @@ import Siesta
 @Observable class PokedexViewModel
 {
     var pokemonEntries = [PokemonEntry]()
+    var count: Int?
+    private var offset = 0
     
     init()
     {
-        PokemonService.shared.pokemonEntries.addObserver(self).loadIfNeeded()
+        PokemonService.shared.pokemonEntries(for: 0..<151).addObserver(self).loadIfNeeded()
+    }
+    
+    func fetchMore()
+    {
+        PokemonService.shared.pokemonEntries(for: offset ..< offset + 100).addObserver(self).loadIfNeeded()
     }
 }
 
@@ -25,8 +32,11 @@ extension PokedexViewModel: ResourceObserver
         setEntries(resource.typedContent())
     }
     
-    private func setEntries(_ entries: [PokemonEntry]?) {
+    private func setEntries(_ entries: PokemonEntries?) {
         guard let entries else { return }
-        self.pokemonEntries = entries
+        print("Received: \(entries.results.count)")
+        self.pokemonEntries += entries.results
+        self.count = entries.count
+        self.offset += entries.results.count
     }
 }
