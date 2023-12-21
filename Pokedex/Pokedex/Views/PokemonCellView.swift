@@ -17,7 +17,7 @@ struct PokemonCellView: View
         self.viewModel = PokemonViewModel(entry)
     }
     
-    var color: Color { viewModel.pokemon?.type.color ?? .indigo }
+    var color: Color { viewModel.pokemon?.type.color ?? .gray }
     
     var body: some View
     {
@@ -58,10 +58,17 @@ struct PokemonCellView: View
                     .padding([.bottom, .trailing], 4)
                 }
             }
+            .opacity(viewModel.pokemon != nil ? 1 : 0)
         }
         .background(color)
         .clipShape(.rect(cornerRadius: 12))
         .shadow(color: color, radius: 6)
+        .overlay {
+            if viewModel.pokemon == nil {
+                ProgressView()
+                    .scaleEffect(3)
+            }
+        }
     }
 }
 
