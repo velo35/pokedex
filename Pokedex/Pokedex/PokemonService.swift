@@ -54,10 +54,13 @@ class PokemonService: Service
     func pokemonEntries(for range: Range<Int>) -> Resource { resource("/api/v2/pokemon").withParams(["offset" : "\(range.lowerBound)", "limit": "\(range.upperBound - range.lowerBound)"]) }
     
     func pokemon(for entry: PokemonEntry) -> Resource { resource(entry.url.path) }
+    
+    func latestPokemon(for entry: PokemonEntry) -> Pokemon? { pokemon(for: entry).latestData?.typedContent() }
 }
 
 fileprivate func pokemon(from json: JSON) -> Pokemon
 {
+    guard let id = json["id"].int else { fatalError("id") }
     guard let name = json["name"].string else { fatalError("name") }
     guard let typeString = json["types", 0, "type", "name"].string else { fatalError("\(name): typeString") }
     guard let type = PokemonType(rawValue: typeString) else { fatalError("\(name): type") }
@@ -67,5 +70,5 @@ fileprivate func pokemon(from json: JSON) -> Pokemon
     guard let speed = json["stats"].array?.first(where: { $0["stat", "name"].string == "speed" })?["base_stat"].int else { fatalError("\(name): speed") }
     guard let weight = json["weight"].int else { fatalError("\(name): weight") }
     guard let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { fatalError("\(name): image") }
-    return Pokemon(name: name, type: type, height: height, attack: attack, defense: defense, speed: speed, weight: weight, imageUrl: imageUrl)
+    return Pokemon(id: id, name: name, type: type, height: height, attack: attack, defense: defense, speed: speed, weight: weight, imageUrl: imageUrl)
 }

@@ -11,7 +11,7 @@ struct PokedexView: View
 {
     @Namespace var animation
     @State private var viewModel = PokedexViewModel()
-    @State private var selected: PokemonEntry?
+    @State private var selected: Pokemon?
     @State private var typeFilter: PokemonType?
     
     private let gridItems: [GridItem] = [.init(.flexible()), .init(.flexible())]
@@ -34,7 +34,9 @@ struct PokedexView: View
                             PokemonCellView(entry: entry)
                                 .onTapGesture {
                                     withAnimation {
-                                        selected = entry
+                                        if let pokemon: Pokemon = PokemonService.shared.latestPokemon(for: entry) {
+                                            selected = pokemon
+                                        }
                                     }
                                 }
                                 .matchedGeometryEffect(id: entry.name, in: animation)
@@ -51,8 +53,8 @@ struct PokedexView: View
             }
             .navigationTitle("Pokemon")
         }
-        .sheet(item: $selected) { entry in
-            PokemonDetailView(entry: entry)
+        .sheet(item: $selected) { pokemon in
+            PokemonDetailView(pokemon: pokemon)
         }
     }
 }

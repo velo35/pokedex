@@ -31,8 +31,9 @@ enum PokemonType: String
     case shadow
 }
 
-@Observable class Pokemon
+@Observable class Pokemon: Identifiable
 {
+    let id: Int
     let name: String
     let type: PokemonType
     let height: Int
@@ -42,7 +43,8 @@ enum PokemonType: String
     let weight: Int
     let imageUrl: URL
     
-    init(name: String, type: PokemonType, height: Int, attack: Int, defense: Int, speed: Int, weight: Int, imageUrl: URL) {
+    init(id: Int, name: String, type: PokemonType, height: Int, attack: Int, defense: Int, speed: Int, weight: Int, imageUrl: URL) {
+        self.id = id
         self.name = name
         self.type = type
         self.height = height
@@ -56,7 +58,8 @@ enum PokemonType: String
 
 extension Pokemon
 {
-    static let bulbasaur = Pokemon(name: "bulbasaur", 
+    static let bulbasaur = Pokemon(id: 1,
+                                   name: "bulbasaur", 
                                    type: .grass,
                                    height: 7,
                                    attack: 49,

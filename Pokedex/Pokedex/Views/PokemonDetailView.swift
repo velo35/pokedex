@@ -9,25 +9,43 @@ import SwiftUI
 
 struct PokemonDetailView: View 
 {
-    @State var viewModel: PokemonViewModel
+    let pokemon: Pokemon
     
-    init(entry: PokemonEntry)
-    {
-        self.viewModel = PokemonViewModel(entry)
-    }
+    typealias Stat = (name: String, color: Color)
+    
+    let stats: [Stat] = [
+        ("height", Color.orange),
+        ("attack", Color.red),
+        ("defense", Color.blue),
+        ("speed", Color.cyan),
+        ("weight", Color.purple)
+    ]
     
     var body: some View
     {
-        VStack {
-            ZStack {
-                
-            }
-//            .background(pokemon.type.color)
+        ZStack(alignment: .bottom) {
+            Rectangle().fill(pokemon.type.color.gradient)
             
+            VStack {
+                Spacer()
+                //image
+                
+                VStack {
+                    Grid {
+                        ForEach(stats, id: \.name) { stat in
+                            GridRow {
+                                Text(stat.name.capitalized)
+//                                Text("\(pokemon[keyPath: \.stat.name])")
+                            }
+                        }
+                    }
+                }
+                .background(.white)
+            }
         }
     }
 }
 
 #Preview {
-    PokemonDetailView(entry: .bulbasaur)
+    PokemonDetailView(pokemon: .bulbasaur)
 }
