@@ -13,6 +13,16 @@ struct DetailStatsView: View
     
     let max = 150
     
+    typealias Stat = (name: String, color: Color)
+    
+    let stats: [Stat] = [
+        ("height", Color.orange),
+        ("attack", Color.red),
+        ("defense", Color.blue),
+        ("speed", Color.cyan),
+        ("weight", Color.purple)
+    ]
+    
     var body: some View
     {
         VStack(alignment: .leading) {

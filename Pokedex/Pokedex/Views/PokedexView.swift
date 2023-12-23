@@ -9,8 +9,10 @@ import SwiftUI
 
 struct PokedexView: View 
 {
+    @Environment(PokedexViewModel.self) var viewModel
+    
     @Namespace var animation
-    @State private var viewModel = PokedexViewModel()
+    
     @State private var selected: Pokemon?
     @State private var typeFilter: PokemonType?
     
@@ -34,7 +36,7 @@ struct PokedexView: View
                             PokemonCellView(entry: entry)
                                 .onTapGesture {
                                     withAnimation {
-                                        if let pokemon: Pokemon = PokemonService.shared.latestPokemon(for: entry) {
+                                        if let pokemon = entry.pokemon {
                                             selected = pokemon
                                         }
                                     }
@@ -61,4 +63,5 @@ struct PokedexView: View
 
 #Preview {
     PokedexView()
+        .environment(PokedexViewModel())
 }

@@ -25,6 +25,11 @@ struct PokemonEntries: Codable
 
 extension PokemonEntry
 {
+    var pokemon: Pokemon? { PokemonService.shared.latestPokemon(for: self) }
+}
+
+extension PokemonEntry
+{
     static let bulbasaur = PokemonEntry(name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
 }
 

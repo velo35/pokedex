@@ -12,6 +12,7 @@ struct PokedexApp: App {
     var body: some Scene {
         WindowGroup {
             PokedexView()
+                .environment(PokedexViewModel())
         }
     }
 }

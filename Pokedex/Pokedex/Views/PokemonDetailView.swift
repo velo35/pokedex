@@ -9,20 +9,22 @@ import NukeUI
 import SwiftUI
 import SwiftyJSON
 
+extension Color
+{
+    static var random: Color
+    {
+        Color(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1)
+    }
+}
+
 struct PokemonDetailView: View 
 {
+    @Environment(PokedexViewModel.self) var viewModel
+    
     let pokemon: Pokemon
     @State var flavorText = ""
     
-    typealias Stat = (name: String, color: Color)
-    
-    let stats: [Stat] = [
-        ("height", Color.orange),
-        ("attack", Color.red),
-        ("defense", Color.blue),
-        ("speed", Color.cyan),
-        ("weight", Color.purple)
-    ]
+    let colors: [Color] = [.red, .green, .blue, .purple, .pink, .cyan, .orange, .brown, .cyan, .indigo]
     
     var body: some View
     {
@@ -52,15 +54,24 @@ struct PokemonDetailView: View
             .background(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30))
                 .fill(.white))
             
-            LazyImage(url: pokemon.imageUrl) { state in
-                if let image = state.image {
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 250)
+            ScrollView(.horizontal) {
+                LazyHStack(alignment: .top, spacing: 0) {
+                    ForEach(viewModel.pokemonEntries) { entry in
+                        LazyImage(url: entry.pokemon?.imageUrl) { state in
+                            if let image = state.image {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 250)
+                            }
+                        }
+                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                        .offset(y: 100)
+                    }
                 }
             }
-            .offset(y: -390)
+            .scrollTargetBehavior(.paging)
+            .scrollIndicators(.hidden)
         }
         .task {
             print("starting task!")
@@ -75,4 +86,5 @@ struct PokemonDetailView: View
 
 #Preview {
     PokemonDetailView(pokemon: .bulbasaur)
+        .environment(PokedexViewModel())
 }
