@@ -34,27 +34,26 @@ class PokemonService: Service
     
     private init()
     {
-        super.init(baseURL: "https://pokeapi.co")
+        super.init(baseURL: "https://pokeapi.co/api/v2")
         
         let decoder = JSONDecoder()
         
-        configureTransformer("/api/v2/pokemon", atStage: .parsing) {
+        configureTransformer("/pokemon", atStage: .parsing) {
             try decoder.decode(PokemonEntries.self, from: $0.content)
         }
         
-        configureTransformer("/api/v2/pokemon/*", atStage: .parsing) {
+        configureTransformer("/pokemon/*", atStage: .parsing) {
             try JSON(data: $0.content)
         }
         
-        configureTransformer("/api/v2/pokemon/*") { entity -> Pokemon? in
+        configureTransformer("/pokemon/*") { entity -> Pokemon? in
             Pokedex.pokemon(from: entity.content)
         }
     }
     
-    func pokemonEntries(for range: Range<Int>) -> Resource { resource("/api/v2/pokemon").withParams(["offset" : "\(range.lowerBound)", "limit": "\(range.upperBound - range.lowerBound)"]) }
+    func pokemonEntries(for range: Range<Int>) -> Resource { resource("/pokemon").withParams(["offset" : "\(range.lowerBound)", "limit": "\(range.upperBound - range.lowerBound)"]) }
     
-    func pokemon(for entry: PokemonEntry) -> Resource { resource(entry.url.path) }
-    
+    func pokemon(for entry: PokemonEntry) -> Resource { resource("/pokemon").child(entry.name) }
     func latestPokemon(for entry: PokemonEntry) -> Pokemon? { pokemon(for: entry).latestData?.typedContent() }
 }
 
