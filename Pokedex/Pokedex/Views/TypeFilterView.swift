@@ -16,40 +16,48 @@ struct TypeFilterView: View
     
     var body: some View
     {
-        ZStack {
+        ZStack(alignment: .bottom) {
             VStack {
                 VStack(spacing: 6) {
                     ForEach(typeFilters) { type in
                         Button {
                             typeFilter = type
-                            print("hi")
+                            withAnimation {
+                                typeFiltersShown = false
+                            }
                         } label: {
                             type.image
                                 .renderingMode(.original)
-                                .font(.system(size: 35))
+                                .font(.system(size: 34))
                                 .foregroundStyle(type.color)
-                                .shadow(color: .black.opacity(0.5), radius: 5)
+                                .shadow(color: .black.opacity(1), radius: 4)
                         }
                     }
                 }
+                .padding()
+                .padding(.bottom, 22)
+                .offset(y: typeFiltersShown ? 0 : 200)
+                .clipped()
+                
+                Spacer()
+                    .frame(height: 23)
             }
-            .padding([.horizontal, .top])
-            .padding(.bottom, 36)
-            .offset(y: typeFiltersShown ? 0 : 190)
-            .clipped()
-        }
-        .overlay(alignment: .bottom) {
+            
             Image(systemName: typeFilter == nil ? "line.3.horizontal.decrease.circle.fill" : "arrow.counterclockwise.circle.fill")
                 .renderingMode(.original)
-                .font(.system(size: 45))
+                .font(.system(size: 46))
                 .foregroundStyle(.purple)
                 .shadow(color: .black, radius: 5)
                 .rotationEffect(.degrees(typeFilter == nil && typeFiltersShown ? 180 : 0))
                 .animation(typeFilter == nil ? .default : nil, value: typeFiltersShown)
-                .offset(y: 22)
                 .onTapGesture {
-                    withAnimation {
-                        typeFiltersShown.toggle()
+                    if typeFilter == nil {
+                        withAnimation {
+                            typeFiltersShown.toggle()
+                        }
+                    }
+                    else {
+                        typeFilter = nil
                     }
                 }
         }
