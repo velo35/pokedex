@@ -13,15 +13,37 @@ struct DetailStatsView: View
     
     let max = 150
     
-    typealias Stat = (name: String, color: Color)
+    typealias Stat = (name: String, keyPath: KeyPath<Pokemon, Int>, color: Color)
     
     let stats: [Stat] = [
-        ("height", Color.orange),
-        ("attack", Color.red),
-        ("defense", Color.blue),
-        ("speed", Color.cyan),
-        ("weight", Color.purple)
+        ("height", \Pokemon.height, Color.orange),
+        ("attack", \Pokemon.attack, Color.red),
+        ("defense", \Pokemon.defense, Color.blue),
+        ("speed", \Pokemon.speed, Color.cyan),
+        ("weight", \Pokemon.weight, Color.purple)
     ]
+    
+    func row(_ stat: Stat) -> some View
+    {
+        GridRow {
+            Text(stat.name.capitalized)
+                .foregroundStyle(.gray)
+            
+            Text("\(pokemon[keyPath: stat.keyPath])")
+                .fontWeight(.semibold)
+            
+            ZStack(alignment: .leading) {
+                Rectangle().fill(Color.black.opacity(0.45).gradient)
+                GeometryReader { geometry in
+                    Capsule()
+                        .fill(stat.color.gradient)
+                        .frame(width: geometry.size.width * CGFloat(pokemon[keyPath: stat.keyPath]) / CGFloat(max))
+                }
+            }
+            .frame(height: 26)
+            .clipShape(Capsule())
+        }
+    }
     
     var body: some View
     {
@@ -30,87 +52,8 @@ struct DetailStatsView: View
                 .fontWeight(.semibold)
             
             Grid(horizontalSpacing: 26) {
-    #if false
                 ForEach(stats, id: \.name) { stat in
-                    GridRow {
-                        Text(stat.name.capitalized)
-                        Text("\(pokemon[keyPath: \.stat.name])")
-                    }
-                }
-    #endif
-                GridRow {
-                    Text("Height")
-                        .foregroundStyle(.gray)
-                    
-                    Text("\(pokemon.height)")
-                        .fontWeight(.semibold)
-                    
-                    ZStack(alignment: .leading) {
-                        Color.gray
-                        GeometryReader { geometry in
-                            Capsule()
-                                .fill(.orange)
-                                .frame(width: geometry.size.width * CGFloat(pokemon.height) / CGFloat(max))
-                        }
-                    }
-                    .frame(height: 26)
-                    .clipShape(Capsule())
-                }
-                GridRow {
-                    Text("Attack")
-                    Text("\(pokemon.attack)")
-                    ZStack(alignment: .leading) {
-                        Color.gray
-                        GeometryReader { geometry in
-                            Capsule()
-                                .fill(.red)
-                                .frame(width: geometry.size.width * CGFloat(pokemon.attack) / CGFloat(max))
-                        }
-                    }
-                    .frame(height: 26)
-                    .clipShape(Capsule())
-                }
-                GridRow {
-                    Text("Defense")
-                    Text("\(pokemon.defense)")
-                    ZStack(alignment: .leading) {
-                        Color.gray
-                        GeometryReader { geometry in
-                            Capsule()
-                                .fill(.blue)
-                                .frame(width: geometry.size.width * CGFloat(pokemon.defense) / CGFloat(max))
-                        }
-                    }
-                    .frame(height: 26)
-                    .clipShape(Capsule())
-                }
-                GridRow {
-                    Text("Speed")
-                    Text("\(pokemon.speed)")
-                    ZStack(alignment: .leading) {
-                        Color.gray
-                        GeometryReader { geometry in
-                            Capsule()
-                                .fill(.green)
-                                .frame(width: geometry.size.width * CGFloat(pokemon.speed) / CGFloat(max))
-                        }
-                    }
-                    .frame(height: 26)
-                    .clipShape(Capsule())
-                }
-                GridRow {
-                    Text("Weight")
-                    Text("\(pokemon.weight)")
-                    ZStack(alignment: .leading) {
-                        Color.gray
-                        GeometryReader { geometry in
-                            Capsule()
-                                .fill(.purple)
-                                .frame(width: geometry.size.width * CGFloat(pokemon.weight) / CGFloat(max))
-                        }
-                    }
-                    .frame(height: 26)
-                    .clipShape(Capsule())
+                    row(stat)
                 }
             }
         }
