@@ -9,32 +9,14 @@ import Foundation
 import Siesta
 import SwiftyJSON
 
-struct PokemonEntry: Identifiable, Codable
-{
-    let name: String
-    let url: URL
-    
-    var id: URL { url }
-}
-
-struct PokemonEntries: Codable
-{
-    let count: Int
-    let results: [PokemonEntry]
-}
-
-extension PokemonEntry
-{
-    var pokemon: Pokemon? { PokemonService.shared.latestPokemon(for: self) }
-}
-
-extension PokemonEntry
-{
-    static let bulbasaur = PokemonEntry(name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
-}
-
 class PokemonService: Service
 {
+    struct PokemonEntries: Codable
+    {
+        let count: Int
+        let results: [PokemonEntry]
+    }
+    
     static let shared = PokemonService()
     
     private init()
@@ -44,7 +26,7 @@ class PokemonService: Service
         let decoder = JSONDecoder()
         
         configureTransformer("/pokemon", atStage: .parsing) {
-            try decoder.decode(PokemonEntries.self, from: $0.content)
+            (try? decoder.decode(PokemonEntries.self, from: $0.content))?.results
         }
         
         configureTransformer("/pokemon/*", atStage: .parsing) {
@@ -64,7 +46,6 @@ class PokemonService: Service
 
 fileprivate func pokemon(from json: JSON) -> Pokemon
 {
-    guard let id = json["id"].int else { fatalError("id") }
     guard let name = json["name"].string else { fatalError("name") }
     guard let typeString = json["types", 0, "type", "name"].string else { fatalError("\(name): typeString") }
     guard let type = PokemonType(rawValue: typeString) else { fatalError("\(name): type") }
@@ -74,5 +55,5 @@ fileprivate func pokemon(from json: JSON) -> Pokemon
     guard let speed = json["stats"].array?.first(where: { $0["stat", "name"].string == "speed" })?["base_stat"].int else { fatalError("\(name): speed") }
     guard let weight = json["weight"].int else { fatalError("\(name): weight") }
     guard let imageUrl = json["sprites", "other", "official-artwork", "front_default"].url else { fatalError("\(name): image") }
-    return Pokemon(id: id, name: name, type: type, height: height, attack: attack, defense: defense, speed: speed, weight: weight, imageUrl: imageUrl)
+    return Pokemon(name: name, type: type, height: height, attack: attack, defense: defense, speed: speed, weight: weight, imageUrl: imageUrl)
 }

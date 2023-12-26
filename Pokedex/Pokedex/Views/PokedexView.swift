@@ -13,8 +13,10 @@ struct PokedexView: View
     
     @Namespace var animation
     
-    @State private var selected: Pokemon?
+    @State private var selectedEntry: PokemonEntry?
     @State private var typeFilter: PokemonType?
+    
+    @State private var detailShown = false
     
     private let gridItems: [GridItem] = [.init(.flexible()), .init(.flexible())]
     
@@ -32,14 +34,11 @@ struct PokedexView: View
             ZStack(alignment: .bottomTrailing) {
                 ScrollView {
                     LazyVGrid(columns: gridItems, spacing: 16) {
-                        ForEach(filteredPokemonEntries, id: \.url) { entry in
+                        ForEach(filteredPokemonEntries) { entry in
                             PokemonCellView(entry: entry)
                                 .onTapGesture {
-                                    withAnimation {
-                                        if let pokemon = entry.pokemon {
-                                            selected = pokemon
-                                        }
-                                    }
+                                    selectedEntry = entry
+                                    detailShown = true
                                 }
                                 .matchedGeometryEffect(id: entry.name, in: animation)
                         }
@@ -55,8 +54,8 @@ struct PokedexView: View
             }
             .navigationTitle("Pokemon")
         }
-        .sheet(item: $selected) { pokemon in
-            PokemonDetailView(pokemon: pokemon)
+        .sheet(isPresented: $detailShown) {
+            PokemonDetailView(selectedEntry: $selectedEntry)
         }
     }
 }

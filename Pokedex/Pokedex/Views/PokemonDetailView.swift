@@ -9,42 +9,44 @@ import NukeUI
 import SwiftUI
 import SwiftyJSON
 
-extension Color
-{
-    static var random: Color
-    {
-        Color(hue: CGFloat.random(in: 0...1), saturation: 1, brightness: 1)
-    }
-}
-
 struct PokemonDetailView: View 
 {
-    @Environment(PokedexViewModel.self) var viewModel
+    @Namespace var scrollOffset
+    private struct ScrollOffsetPreference: PreferenceKey
+    {
+        static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
+        static var defaultValue = CGRect.zero
+    }
     
-    let pokemon: Pokemon
+    @Environment(PokedexViewModel.self) var pokedexViewModel
+    
     @State var flavorText = ""
+    @Binding var selectedEntry: PokemonEntry?
+    @State var pokemonViewModel: PokemonViewModel?
     
-    let colors: [Color] = [.red, .green, .blue, .purple, .pink, .cyan, .orange, .brown, .cyan, .indigo]
+    var pokemon: Pokemon? { pokemonViewModel?.pokemon }
+    var color: Color { pokemon?.type.color ?? .gray }
     
     var body: some View
     {
         ZStack(alignment: .bottom) {
             Rectangle()
-                .fill(pokemon.type.color.gradient)
+                .fill(color.gradient)
             
             VStack {
-//                Spacer(minLength: 45)
-                Text(pokemon.name.capitalized)
+                Text(selectedEntry?.name.capitalized ?? "")
                     .font(.largeTitle.weight(.medium))
                 
-                Text(pokemon.type.rawValue.capitalized)
+                Text(pokemon?.type.rawValue.capitalized ?? "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 26)
-                    .background(Capsule().fill(pokemon.type.color))
+                    .background(Capsule().fill(color))
                 
-                DetailStatsView(pokemon: pokemon)
+                if let pokemon {
+                    DetailStatsView(pokemon: pokemon)
+                }
                 
                 Spacer()
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
@@ -54,37 +56,64 @@ struct PokemonDetailView: View
             .background(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30))
                 .fill(.white))
             
-            ScrollView(.horizontal) {
-                LazyHStack(alignment: .top, spacing: 0) {
-                    ForEach(viewModel.pokemonEntries) { entry in
-                        LazyImage(url: entry.pokemon?.imageUrl) { state in
-                            if let image = state.image {
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 250)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal) {
+                    LazyHStack(alignment: .top, spacing: 0) {
+                        ForEach(pokedexViewModel.pokemonEntries) { entry in
+                            VStack {
+                                Spacer()
+                                    .frame(height: 110)
+                                LazyImage(url: entry.pokemon?.imageUrl) { state in
+                                    if let image = state.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 250)
+                                    }
+                                }
+                                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                            .id(entry)
                             }
                         }
-                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                        .offset(y: 100)
+                    }
+                    .background {
+                        GeometryReader { proxy in
+                            Color.clear
+                                .preference(
+                                    key: ScrollOffsetPreference.self,
+                                    value: proxy.frame(in: .named(scrollOffset))
+                                )
+                        }
                     }
                 }
+                .scrollTargetBehavior(.paging)
+                .scrollIndicators(.hidden)
+                .onAppear {
+                    proxy.scrollTo(selectedEntry)
+                }
+                .coordinateSpace(name: scrollOffset)
+                .onPreferenceChange(ScrollOffsetPreference.self) { frame in
+                    guard frame.width > 0 else { return }
+                    let contentOffset = CGPoint(x: -frame.origin.x, y: -frame.origin.y)
+                    let ndx = Int(round(CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffset.x / frame.width))
+                    let entry = pokedexViewModel.pokemonEntries[ndx]
+                    selectedEntry = entry
+                    pokemonViewModel = PokemonViewModel(entry)
+                }
             }
-            .scrollTargetBehavior(.paging)
-            .scrollIndicators(.hidden)
         }
         .task {
-            print("starting task!")
-            guard let (data, response) = try? await URLSession.shared.data(from: URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(pokemon.name)")!) else { print("!!! - fetch"); return }
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { print("!!! - response"); return }
-            guard let json = try? JSON(data: data) else { print("!!! - json"); return }
-            guard let flavor_text = json["flavor_text_entries", 0, "flavor_text"].string else { print("!!! - flavor_text"); return }
-            flavorText = flavor_text
+//            print("starting task!")
+//            guard let (data, response) = try? await URLSession.shared.data(from: URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(pokemon.name)")!) else { print("!!! - fetch"); return }
+//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { print("!!! - response"); return }
+//            guard let json = try? JSON(data: data) else { print("!!! - json"); return }
+//            guard let flavor_text = json["flavor_text_entries", 0, "flavor_text"].string else { print("!!! - flavor_text"); return }
+//            flavorText = flavor_text
         }
     }
 }
 
 #Preview {
-    PokemonDetailView(pokemon: .bulbasaur)
+    PokemonDetailView(selectedEntry: .constant(.bulbasaur))
         .environment(PokedexViewModel())
 }

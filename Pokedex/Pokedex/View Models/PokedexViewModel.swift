@@ -11,7 +11,6 @@ import Siesta
 @Observable class PokedexViewModel
 {
     var pokemonEntries = [PokemonEntry]()
-    var count: Int?
     private var offset = 0
     
     init()
@@ -32,11 +31,10 @@ extension PokedexViewModel: ResourceObserver
         setEntries(resource.typedContent())
     }
     
-    private func setEntries(_ entries: PokemonEntries?) {
+    private func setEntries(_ entries: [PokemonEntry]?) {
         guard let entries else { return }
-        print("Received: \(entries.results.count)")
-        self.pokemonEntries += entries.results
-        self.count = entries.count
-        self.offset += entries.results.count
+        print("Received: \(entries.count)")
+        self.pokemonEntries += entries
+        self.offset += entries.count
     }
 }

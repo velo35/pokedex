@@ -10,27 +10,24 @@ import NukeUI
 
 struct PokemonCellView: View 
 {
-    @State var viewModel: PokemonViewModel
+    let entry: PokemonEntry
+    @State var viewModel: PokemonViewModel?
     
-    init(entry: PokemonEntry)
-    {
-        self.viewModel = PokemonViewModel(entry)
-    }
-    
-    var color: Color { viewModel.pokemon?.type.color ?? .gray }
+    var pokemon: Pokemon? { viewModel?.pokemon }
+    var color: Color { pokemon?.type.color ?? .gray }
     
     var body: some View
     {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text(viewModel.name.capitalized)
+                Text(entry.name.capitalized)
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.top, 8)
                     .padding(.leading)
                 
                 HStack {
-                    Text(viewModel.pokemon?.type.rawValue ?? "")
+                    Text(pokemon?.type.rawValue ?? "")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -41,7 +38,7 @@ struct PokemonCellView: View
                         }
                         .frame(width: 100, height: 24)
                     
-                    LazyImage(url: viewModel.pokemon?.imageUrl) { state in
+                    LazyImage(url: pokemon?.imageUrl) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -58,16 +55,19 @@ struct PokemonCellView: View
                     .padding([.bottom, .trailing], 4)
                 }
             }
-            .opacity(viewModel.pokemon != nil ? 1 : 0)
+            .opacity(pokemon != nil ? 1 : 0)
         }
         .background(color)
         .clipShape(.rect(cornerRadius: 12))
         .shadow(color: color, radius: 6)
         .overlay {
-            if viewModel.pokemon == nil {
+            if pokemon == nil {
                 ProgressView()
                     .scaleEffect(3)
             }
+        }
+        .onAppear {
+            self.viewModel = PokemonViewModel(entry)
         }
     }
 }
