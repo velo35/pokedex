@@ -10,17 +10,21 @@ import NukeUI
 
 struct PokemonCellView: View 
 {
-    let entry: PokemonEntry
-    @State var viewModel: PokemonViewModel?
+    @State var viewModel: PokemonViewModel
     
-    var pokemon: Pokemon? { viewModel?.pokemon }
+    init(entry: PokemonEntry)
+    {
+        viewModel = PokemonViewModel(entry)
+    }
+    
+    var pokemon: Pokemon? { viewModel.pokemon }
     var color: Color { pokemon?.type.color ?? .gray }
     
     var body: some View
     {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text(entry.name.capitalized)
+                Text(pokemon?.name.capitalized ?? "")
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.top, 8)
@@ -65,9 +69,6 @@ struct PokemonCellView: View
                 ProgressView()
                     .scaleEffect(3)
             }
-        }
-        .onAppear {
-            self.viewModel = PokemonViewModel(entry)
         }
     }
 }

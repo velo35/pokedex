@@ -34,7 +34,7 @@ struct PokemonDetailView: View
                 .fill(color.gradient)
             
             VStack {
-                Text(selectedEntry?.name.capitalized ?? "")
+                Text(pokemon?.name.capitalized ?? "")
                     .font(.largeTitle.weight(.medium))
                 
                 Text(pokemon?.type.rawValue.capitalized ?? "")
@@ -44,9 +44,8 @@ struct PokemonDetailView: View
                     .padding(.horizontal, 26)
                     .background(Capsule().fill(color))
                 
-                if let pokemon {
-                    DetailStatsView(pokemon: pokemon)
-                }
+                
+                DetailStatsView(selectedEntry: $selectedEntry)
                 
                 Spacer()
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
@@ -63,7 +62,7 @@ struct PokemonDetailView: View
                             VStack {
                                 Spacer()
                                     .frame(height: 110)
-                                LazyImage(url: entry.pokemon?.imageUrl) { state in
+                                LazyImage(url: pokemon?.imageUrl) { state in
                                     if let image = state.image {
                                         image
                                             .resizable()
@@ -71,9 +70,9 @@ struct PokemonDetailView: View
                                             .frame(height: 250)
                                     }
                                 }
-                                .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
-                            .id(entry)
                             }
+                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                            .id(entry)
                         }
                     }
                     .background {
@@ -96,11 +95,13 @@ struct PokemonDetailView: View
                     guard frame.width > 0 else { return }
                     let contentOffset = CGPoint(x: -frame.origin.x, y: -frame.origin.y)
                     let ndx = Int(round(CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffset.x / frame.width))
-                    let entry = pokedexViewModel.pokemonEntries[ndx]
-                    selectedEntry = entry
-                    pokemonViewModel = PokemonViewModel(entry)
+                    selectedEntry = pokedexViewModel.pokemonEntries[ndx]
                 }
             }
+        }
+        .onChange(of: selectedEntry, initial: true) {
+            guard let selectedEntry else { return }
+            pokemonViewModel = PokemonViewModel(selectedEntry)
         }
         .task {
 //            print("starting task!")
