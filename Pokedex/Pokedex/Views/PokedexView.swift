@@ -32,19 +32,27 @@ struct PokedexView: View
     {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                ScrollView {
-                    LazyVGrid(columns: gridItems, spacing: 16) {
-                        ForEach(filteredPokemonEntries) { entry in
-                            PokemonCellView(entry: entry)
-                                .onTapGesture {
-                                    selectedEntry = entry
-                                    detailShown = true
-                                }
-                                .matchedGeometryEffect(id: entry.name, in: animation)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVGrid(columns: gridItems, spacing: 16) {
+                            ForEach(filteredPokemonEntries) { entry in
+                                PokemonCellView(entry: entry)
+                                    .onTapGesture {
+                                        selectedEntry = entry
+                                    }
+                                    .matchedGeometryEffect(id: entry.name, in: animation)
+                                    .id(entry)
+                            }
+                        }
+                        Button("Load More") {
+                            viewModel.fetchMore()
                         }
                     }
-                    Button("Load More") {
-                        viewModel.fetchMore()
+                    .onChange(of: selectedEntry, initial: true) {
+                        detailShown = selectedEntry != nil
+                        if let selectedEntry {
+                            proxy.scrollTo(selectedEntry, anchor: .center)
+                        }
                     }
                 }
                 
@@ -55,6 +63,8 @@ struct PokedexView: View
             .navigationTitle("Pokemon")
         }
         .sheet(isPresented: $detailShown) {
+            selectedEntry = nil
+        } content: {
             PokemonDetailView(selectedEntry: $selectedEntry)
         }
     }
