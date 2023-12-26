@@ -62,7 +62,7 @@ struct PokemonDetailView: View
                             VStack {
                                 Spacer()
                                     .frame(height: 110)
-                                LazyImage(url: pokemon?.imageUrl) { state in
+                                LazyImage(url: entry.cachedPokemon?.imageUrl ?? pokemon?.imageUrl) { state in
                                     if let image = state.image {
                                         image
                                             .resizable()
@@ -94,7 +94,8 @@ struct PokemonDetailView: View
                 .onPreferenceChange(ScrollOffsetPreference.self) { frame in
                     guard frame.width > 0 else { return }
                     let contentOffset = CGPoint(x: -frame.origin.x, y: -frame.origin.y)
-                    let ndx = Int(round(CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffset.x / frame.width))
+                    let entryOffset = CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffset.x / frame.width
+                    let ndx = Int(round(entryOffset))
                     selectedEntry = pokedexViewModel.pokemonEntries[ndx]
                 }
             }

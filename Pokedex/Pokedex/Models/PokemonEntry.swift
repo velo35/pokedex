@@ -17,5 +17,7 @@ struct PokemonEntry: Identifiable, Codable, Equatable, Hashable
 
 extension PokemonEntry
 {    
+    var cachedPokemon: Pokemon? { PokemonService.shared.latestPokemon(for: self) }
+    
     static let bulbasaur = PokemonEntry(name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
 }
