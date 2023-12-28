@@ -48,6 +48,7 @@ struct DetailStatsView: View
                     Capsule()
                         .fill(stat.color.gradient)
                         .frame(width: geometry.size.width * CGFloat(pokemon[keyPath: stat.keyPath]) / CGFloat(max))
+                        .animation(.default, value: pokemon[keyPath: stat.keyPath])
                 }
             }
             .frame(height: 26)
