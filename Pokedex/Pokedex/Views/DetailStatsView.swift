@@ -9,12 +9,16 @@ import SwiftUI
 
 struct DetailStatsView: View 
 {
-    @Binding var selectedEntry: PokemonEntry?
-    @State var viewModel: PokemonViewModel?
+    private var viewModel: PokemonViewModel
+    
+    init(entry: PokemonEntry)
+    {
+        self.viewModel = PokemonViewModel(entry)
+    }
     
     var pokemon: Pokemon
     {
-        viewModel?.pokemon ?? Pokemon(name: "", type: .unknown, height: 0, attack: 0, defense: 0, speed: 0, weight: 0, imageUrl: nil)
+        self.viewModel.pokemon ?? Pokemon(name: "", type: .unknown, height: 0, attack: 0, defense: 0, speed: 0, weight: 0, imageUrl: nil)
     }
     
     let max = 150
@@ -63,13 +67,9 @@ struct DetailStatsView: View
                 }
             }
         }
-        .onChange(of: selectedEntry, initial: true) {
-            guard let selectedEntry else { return }
-            viewModel = PokemonViewModel(selectedEntry)
-        }
     }
 }
 
 #Preview {
-    DetailStatsView(selectedEntry: .constant(.bulbasaur))
+    DetailStatsView(entry: .bulbasaur)
 }

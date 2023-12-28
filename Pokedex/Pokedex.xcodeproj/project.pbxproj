@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE0ED96A2B3DAAA5009057F3 /* HeroImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0ED9692B3DAAA5009057F3 /* HeroImageView.swift */; };
 		BE25AED92B366B1F002C3412 /* DetailStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE25AED82B366B1F002C3412 /* DetailStatsView.swift */; };
 		BE2C59002B32464500500E55 /* PokemonTypeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2C58FF2B32464500500E55 /* PokemonTypeExtensions.swift */; };
 		BE2C59022B32471C00500E55 /* TypeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2C59012B32471C00500E55 /* TypeFilterView.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE0ED9692B3DAAA5009057F3 /* HeroImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroImageView.swift; sourceTree = "<group>"; };
 		BE25AED82B366B1F002C3412 /* DetailStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStatsView.swift; sourceTree = "<group>"; };
 		BE2C58FF2B32464500500E55 /* PokemonTypeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonTypeExtensions.swift; sourceTree = "<group>"; };
 		BE2C59012B32471C00500E55 /* TypeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeFilterView.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 			children = (
 				BE4FF6DD2B2BC73900DD2DEC /* PokemonCellView.swift */,
 				BE9DBC552B312EE500123162 /* PokemonDetailView.swift */,
+				BE0ED9692B3DAAA5009057F3 /* HeroImageView.swift */,
 				BE4FF6DF2B2BD24C00DD2DEC /* PokedexView.swift */,
 				BE25AED82B366B1F002C3412 /* DetailStatsView.swift */,
 				BE2C59012B32471C00500E55 /* TypeFilterView.swift */,
@@ -236,6 +239,7 @@
 				BE9DBC562B312EE500123162 /* PokemonDetailView.swift in Sources */,
 				BE9DBC532B3110EC00123162 /* PokemonViewModel.swift in Sources */,
 				BE4FF6CE2B2BC6CB00DD2DEC /* PokedexApp.swift in Sources */,
+				BE0ED96A2B3DAAA5009057F3 /* HeroImageView.swift in Sources */,
 				BE4FF6DE2B2BC73900DD2DEC /* PokemonCellView.swift in Sources */,
 				BE2C59022B32471C00500E55 /* TypeFilterView.swift in Sources */,
 				BE5B4E052B38EEA200DD4AA4 /* PokemonEntry.swift in Sources */,

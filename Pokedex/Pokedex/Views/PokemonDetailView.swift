@@ -5,7 +5,6 @@
 //  Created by Scott Daniel on 12/18/23.
 //
 
-import NukeUI
 import SwiftUI
 import SwiftyJSON
 
@@ -45,7 +44,7 @@ struct PokemonDetailView: View
                     .background(Capsule().fill(color))
                 
                 
-                DetailStatsView(selectedEntry: $selectedEntry)
+                DetailStatsView(entry: selectedEntry!)
                 
                 Spacer()
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
@@ -62,14 +61,7 @@ struct PokemonDetailView: View
                             VStack {
                                 Spacer()
                                     .frame(height: 110)
-                                LazyImage(url: entry.cachedPokemon?.imageUrl ?? pokemon?.imageUrl) { state in
-                                    if let image = state.image {
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(height: 250)
-                                    }
-                                }
+                                HeroImageView(entry: entry)
                             }
                             .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
                             .id(entry)
