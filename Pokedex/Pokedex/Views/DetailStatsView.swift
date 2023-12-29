@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct DetailStatsView: View 
 {
@@ -39,8 +40,12 @@ struct DetailStatsView: View
             Text(stat.name.capitalized)
                 .foregroundStyle(.gray)
             
-            Text("\(pokemon[keyPath: stat.keyPath])")
-                .fontWeight(.semibold)
+            ZStack {
+                Text("00000")
+                    .hidden()
+                Text("\(pokemon[keyPath: stat.keyPath])")
+                    .fontWeight(.semibold)
+            }
             
             ZStack(alignment: .leading) {
                 Rectangle().fill(Color.black.opacity(0.45).gradient)
@@ -62,7 +67,7 @@ struct DetailStatsView: View
             Text("Stats")
                 .fontWeight(.semibold)
             
-            Grid(horizontalSpacing: 26) {
+            Grid(horizontalSpacing: 20) {
                 ForEach(stats, id: \.name) { stat in
                     row(stat)
                 }
@@ -73,4 +78,8 @@ struct DetailStatsView: View
 
 #Preview {
     DetailStatsView(entry: .bulbasaur)
+}
+
+#Preview {
+    DetailStatsView(entry: .venasaur)
 }
