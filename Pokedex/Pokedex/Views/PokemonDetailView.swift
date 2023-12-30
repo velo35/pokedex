@@ -21,9 +21,15 @@ struct PokemonDetailView: View
     
     @State var flavorText = ""
     @Binding var selectedEntry: PokemonEntry?
-    @State var pokemonViewModel: PokemonViewModel?
+    @State var pokemonViewModel: PokemonViewModel
     
-    var pokemon: Pokemon? { pokemonViewModel?.pokemon }
+    init(selectedEntry: Binding<PokemonEntry?>)
+    {
+        _selectedEntry = selectedEntry
+        _pokemonViewModel = State(wrappedValue: PokemonViewModel(selectedEntry.wrappedValue!))
+    }
+    
+    var pokemon: Pokemon? { pokemonViewModel.pokemon }
     var color: Color { pokemon?.type.color ?? .gray }
     
     var body: some View
@@ -44,7 +50,7 @@ struct PokemonDetailView: View
                     .background(Capsule().fill(color))
                 
                 
-                DetailStatsView(entry: selectedEntry!)
+                DetailStatsView(viewModel: pokemonViewModel)
                 
                 Spacer()
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
@@ -92,9 +98,8 @@ struct PokemonDetailView: View
                 }
             }
         }
-        .onChange(of: selectedEntry, initial: true) {
-            guard let selectedEntry else { return }
-            pokemonViewModel = PokemonViewModel(selectedEntry)
+        .onChange(of: selectedEntry) {
+            pokemonViewModel = PokemonViewModel(selectedEntry!)
         }
         .task {
 //            print("starting task!")

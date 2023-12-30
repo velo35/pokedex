@@ -10,12 +10,7 @@ import UIKit
 
 struct DetailStatsView: View 
 {
-    private var viewModel: PokemonViewModel
-    
-    init(entry: PokemonEntry)
-    {
-        self.viewModel = PokemonViewModel(entry)
-    }
+    var viewModel: PokemonViewModel
     
     var pokemon: Pokemon
     {
@@ -77,9 +72,5 @@ struct DetailStatsView: View
 }
 
 #Preview {
-    DetailStatsView(entry: .bulbasaur)
-}
-
-#Preview {
-    DetailStatsView(entry: .venasaur)
+    DetailStatsView(viewModel: PokemonViewModel(.bulbasaur))
 }
