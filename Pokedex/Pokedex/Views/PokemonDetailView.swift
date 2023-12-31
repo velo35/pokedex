@@ -21,15 +21,9 @@ struct PokemonDetailView: View
     
     @State var flavorText = ""
     @Binding var selectedEntry: PokemonEntry?
-    @State var pokemonViewModel: PokemonViewModel
+    @State var pokemonViewModel: PokemonViewModel?
     
-    init(selectedEntry: Binding<PokemonEntry?>)
-    {
-        _selectedEntry = selectedEntry
-        _pokemonViewModel = State(wrappedValue: PokemonViewModel(selectedEntry.wrappedValue!))
-    }
-    
-    var color: Color { pokemonViewModel.pokemon?.type.color ?? .gray }
+    var color: Color { pokemonViewModel?.pokemon?.type.color ?? .gray }
     
     var body: some View
     {
@@ -38,10 +32,10 @@ struct PokemonDetailView: View
                 .fill(color.gradient)
             
             VStack {
-                Text(pokemonViewModel.name.capitalized)
+                Text(selectedEntry!.name.capitalized)
                     .font(.largeTitle.weight(.medium))
                 
-                Text(pokemonViewModel.pokemon?.type.rawValue.capitalized ?? "")
+                Text(pokemonViewModel?.pokemon?.type.rawValue.capitalized ?? "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                     .padding(.vertical, 10)
@@ -49,7 +43,7 @@ struct PokemonDetailView: View
                     .background(Capsule().fill(color))
                 
                 
-                DetailStatsView(viewModel: pokemonViewModel)
+                DetailStatsView(pokemon: pokemonViewModel?.pokemon ?? .empty)
                 
                 Spacer()
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)

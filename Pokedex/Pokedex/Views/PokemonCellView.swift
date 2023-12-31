@@ -12,11 +12,6 @@ struct PokemonCellView: View
 {
     @State var viewModel: PokemonViewModel
     
-    init(entry: PokemonEntry)
-    {
-        viewModel = PokemonViewModel(entry)
-    }
-    
     var pokemon: Pokemon? { viewModel.pokemon }
     var color: Color { pokemon?.type.color ?? .gray }
     
@@ -74,5 +69,5 @@ struct PokemonCellView: View
 }
 
 #Preview {
-    PokemonCellView(entry: .bulbasaur)
+    PokemonCellView(viewModel: PokemonViewModel(.bulbasaur))
 }

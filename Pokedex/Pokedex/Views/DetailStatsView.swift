@@ -10,14 +10,9 @@ import UIKit
 
 struct DetailStatsView: View 
 {
-    var viewModel: PokemonViewModel
-    
     var pokemon: Pokemon
-    {
-        self.viewModel.pokemon ?? Pokemon(name: "", type: .unknown, height: 0, attack: 0, defense: 0, speed: 0, weight: 0, imageUrl: nil)
-    }
     
-    let max = 150
+    private let max = 150
     
     typealias Stat = (name: String, keyPath: KeyPath<Pokemon, Int>, color: Color)
     
@@ -72,5 +67,5 @@ struct DetailStatsView: View
 }
 
 #Preview {
-    DetailStatsView(viewModel: PokemonViewModel(.bulbasaur))
+    DetailStatsView(pokemon: .bulbasaur)
 }

@@ -36,7 +36,7 @@ struct PokedexView: View
                     ScrollView {
                         LazyVGrid(columns: gridItems, spacing: 16) {
                             ForEach(filteredPokemonEntries) { entry in
-                                PokemonCellView(entry: entry)
+                                PokemonCellView(viewModel: PokemonViewModel(entry))
                                     .onTapGesture {
                                         selectedEntry = entry
                                     }
