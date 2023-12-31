@@ -32,29 +32,23 @@ struct PokedexView: View
     {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVGrid(columns: gridItems, spacing: 16) {
-                            ForEach(filteredPokemonEntries) { entry in
-                                PokemonCellView(viewModel: PokemonViewModel(entry))
-                                    .onTapGesture {
-                                        selectedEntry = entry
-                                    }
-                                    .matchedGeometryEffect(id: entry.name, in: animation)
-                                    .id(entry)
-                            }
-                        }
-                        Button("Load More") {
-                            viewModel.fetchMore()
+                ScrollView {
+                    LazyVGrid(columns: gridItems, spacing: 16) {
+                        ForEach(filteredPokemonEntries) { entry in
+                            PokemonCellView(viewModel: PokemonViewModel(entry))
+                                .onTapGesture {
+                                    selectedEntry = entry
+                                    detailShown = true
+                                }
+                                .matchedGeometryEffect(id: entry.name, in: animation)
+                                .id(entry)
                         }
                     }
-                    .onChange(of: selectedEntry, initial: true) {
-                        detailShown = selectedEntry != nil
-                        if let selectedEntry {
-                            proxy.scrollTo(selectedEntry, anchor: .center)
-                        }
+                    Button("Load More") {
+                        viewModel.fetchMore()
                     }
                 }
+                .scrollPosition(id: $selectedEntry, anchor: .center)
                 
                 TypeFilterView(typeFilter: $typeFilter)
                     .padding([.bottom, .trailing])
