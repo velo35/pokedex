@@ -82,8 +82,9 @@ struct PokemonDetailView: View
                                 )
                         }
                     }
+                    .scrollTargetLayout()
                 }
-                .scrollTargetBehavior(.paging)
+                .scrollTargetBehavior(.viewAligned)
                 .scrollIndicators(.hidden)
                 .onAppear {
                     proxy.scrollTo(selectedEntry)
@@ -94,12 +95,11 @@ struct PokemonDetailView: View
                     let contentOffset = CGPoint(x: -frame.origin.x, y: -frame.origin.y)
                     let entryOffset = CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffset.x / frame.width
                     let ndx = Int(round(entryOffset))
-                    selectedEntry = pokedexViewModel.pokemonEntries[ndx]
+                    let newEntry = pokedexViewModel.pokemonEntries[ndx]
+                    selectedEntry = newEntry
+                    pokemonViewModel = PokemonViewModel(newEntry)
                 }
             }
-        }
-        .onChange(of: selectedEntry) {
-            pokemonViewModel = PokemonViewModel(selectedEntry!)
         }
         .task {
 //            print("starting task!")
@@ -113,6 +113,8 @@ struct PokemonDetailView: View
 }
 
 #Preview {
-    PokemonDetailView(selectedEntry: .constant(.bulbasaur))
-        .environment(PokedexViewModel())
+    StatefulPreviewWrapper(PokemonEntry.bulbasaur) {
+        PokemonDetailView(selectedEntry: $0)
+            .environment(PokedexViewModel())
+    }
 }
