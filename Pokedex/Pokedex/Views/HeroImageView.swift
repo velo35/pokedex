@@ -24,7 +24,6 @@ struct HeroImageView: View
                 image
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 250)
             }
         }
     }

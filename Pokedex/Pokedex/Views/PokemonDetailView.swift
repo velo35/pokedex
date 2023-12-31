@@ -29,8 +29,7 @@ struct PokemonDetailView: View
         _pokemonViewModel = State(wrappedValue: PokemonViewModel(selectedEntry.wrappedValue!))
     }
     
-    var pokemon: Pokemon? { pokemonViewModel.pokemon }
-    var color: Color { pokemon?.type.color ?? .gray }
+    var color: Color { pokemonViewModel.pokemon?.type.color ?? .gray }
     
     var body: some View
     {
@@ -39,10 +38,10 @@ struct PokemonDetailView: View
                 .fill(color.gradient)
             
             VStack {
-                Text(pokemon?.name.capitalized ?? "")
+                Text(pokemonViewModel.name.capitalized)
                     .font(.largeTitle.weight(.medium))
                 
-                Text(pokemon?.type.rawValue.capitalized ?? "")
+                Text(pokemonViewModel.pokemon?.type.rawValue.capitalized ?? "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                     .padding(.vertical, 10)
@@ -66,10 +65,10 @@ struct PokemonDetailView: View
                         ForEach(pokedexViewModel.pokemonEntries) { entry in
                             VStack {
                                 Spacer()
-                                    .frame(height: 110)
+                                    .frame(height: 50)
                                 HeroImageView(entry: entry)
                             }
-                            .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+                            .containerRelativeFrame(.horizontal)
                             .id(entry)
                         }
                     }
@@ -84,6 +83,7 @@ struct PokemonDetailView: View
                     }
                     .scrollTargetLayout()
                 }
+                .contentMargins(.horizontal, 40, for: .scrollContent)
                 .scrollTargetBehavior(.viewAligned)
                 .scrollIndicators(.hidden)
                 .onAppear {
@@ -92,8 +92,8 @@ struct PokemonDetailView: View
                 .coordinateSpace(name: scrollOffset)
                 .onPreferenceChange(ScrollOffsetPreference.self) { frame in
                     guard frame.width > 0 else { return }
-                    let contentOffset = CGPoint(x: -frame.origin.x, y: -frame.origin.y)
-                    let entryOffset = CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffset.x / frame.width
+                    let contentOffsetX = -frame.origin.x
+                    let entryOffset = CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffsetX / frame.width
                     let ndx = Int(round(entryOffset))
                     let newEntry = pokedexViewModel.pokemonEntries[ndx]
                     selectedEntry = newEntry
