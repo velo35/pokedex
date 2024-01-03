@@ -32,23 +32,28 @@ struct PokedexView: View
     {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                ScrollView {
-                    LazyVGrid(columns: gridItems, spacing: 16) {
-                        ForEach(filteredPokemonEntries) { entry in
-                            PokemonCellView(viewModel: PokemonViewModel(entry))
-                                .onTapGesture {
-                                    selectedEntry = entry
-                                    detailShown = true
-                                }
-                                .matchedGeometryEffect(id: entry.name, in: animation)
-                                .id(entry)
+                
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVGrid(columns: gridItems, spacing: 16) {
+                            ForEach(filteredPokemonEntries) { entry in
+                                PokemonCellView(viewModel: PokemonViewModel(entry))
+                                    .onTapGesture {
+                                        selectedEntry = entry
+                                        detailShown = true
+                                    }
+                                    .matchedGeometryEffect(id: entry.name, in: animation)
+                                    .id(entry)
+                            }
+                        }
+                        Button("Load More") {
+                            viewModel.fetchMore()
                         }
                     }
-                    Button("Load More") {
-                        viewModel.fetchMore()
+                    .onChange(of: selectedEntry) {
+                        proxy.scrollTo(selectedEntry, anchor: .center)
                     }
                 }
-                .scrollPosition(id: $selectedEntry, anchor: .center)
                 
                 TypeFilterView(typeFilter: $typeFilter)
                     .padding([.bottom, .trailing])

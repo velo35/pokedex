@@ -10,13 +10,6 @@ import SwiftyJSON
 
 struct PokemonDetailView: View 
 {
-    @Namespace var scrollOffset
-    private struct ScrollOffsetPreference: PreferenceKey
-    {
-        static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
-        static var defaultValue = CGRect.zero
-    }
-    
     @Environment(PokedexViewModel.self) var pokedexViewModel
     
     @State var flavorText = ""
@@ -53,46 +46,26 @@ struct PokemonDetailView: View
             .background(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30))
                 .fill(.white))
             
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal) {
-                    LazyHStack(alignment: .top, spacing: 0) {
-                        ForEach(pokedexViewModel.pokemonEntries) { entry in
-                            VStack {
-                                Spacer()
-                                    .frame(height: 50)
-                                HeroImageView(entry: entry)
-                            }
-                            .containerRelativeFrame(.horizontal)
-                            .id(entry)
+            ScrollView(.horizontal) {
+                LazyHStack(alignment: .top, spacing: 0) {
+                    ForEach(pokedexViewModel.pokemonEntries) { entry in
+                        VStack {
+                            Spacer()
+                                .frame(height: 50)
+                            HeroImageView(entry: entry)
                         }
+                        .containerRelativeFrame(.horizontal)
+                        .id(entry)
                     }
-                    .background {
-                        GeometryReader { proxy in
-                            Color.clear
-                                .preference(
-                                    key: ScrollOffsetPreference.self,
-                                    value: proxy.frame(in: .named(scrollOffset))
-                                )
-                        }
-                    }
-                    .scrollTargetLayout()
                 }
-                .contentMargins(.horizontal, 40, for: .scrollContent)
-                .scrollTargetBehavior(.viewAligned)
-                .scrollIndicators(.hidden)
-                .onAppear {
-                    proxy.scrollTo(selectedEntry)
-                }
-                .coordinateSpace(name: scrollOffset)
-                .onPreferenceChange(ScrollOffsetPreference.self) { frame in
-                    guard frame.width > 0 else { return }
-                    let contentOffsetX = -frame.origin.x
-                    let entryOffset = CGFloat(pokedexViewModel.pokemonEntries.count) * contentOffsetX / frame.width
-                    let ndx = Int(round(entryOffset))
-                    let newEntry = pokedexViewModel.pokemonEntries[ndx]
-                    selectedEntry = newEntry
-                    pokemonViewModel = PokemonViewModel(newEntry)
-                }
+                .scrollTargetLayout()
+            }
+            .contentMargins(.horizontal, 40, for: .scrollContent)
+            .scrollTargetBehavior(.viewAligned)
+            .scrollIndicators(.hidden)
+            .scrollPosition(id: $selectedEntry, anchor: .center)
+            .onChange(of: selectedEntry, initial: true) {
+                pokemonViewModel = PokemonViewModel(selectedEntry!)
             }
         }
         .task {
