@@ -46,8 +46,17 @@ struct PokedexView: View
                                     .id(entry)
                             }
                         }
-                        Button("Load More") {
+                        Button {
                             viewModel.fetchMore()
+                        } label: {
+                            Text("Load More")
+                                .foregroundStyle(.white)
+                                .padding(.horizontal)
+                                .padding(.vertical, 6)
+                                .background {
+                                    Color.blue
+                                        .clipShape(.rect(cornerRadius: 10))
+                                }
                         }
                     }
                     .onChange(of: selectedEntry) {
