@@ -16,8 +16,14 @@ import SwiftyJSON
     
     init(_ entry: PokemonEntry) 
     {
+//        print("PokemonViewModel: \(entry.name)")
         self.name = entry.name
-        PokemonService.shared.pokemon(for: entry).addObserver(self).loadIfNeeded()
+        if let pokemon = PokemonService.shared.latestPokemon(for: entry) {
+            _pokemon = pokemon
+        }
+        else {
+            PokemonService.shared.pokemon(for: entry).addObserver(self).loadIfNeeded()
+        }
     }
 }
 

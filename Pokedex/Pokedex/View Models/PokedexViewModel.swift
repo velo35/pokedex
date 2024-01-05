@@ -10,7 +10,7 @@ import Siesta
 
 @Observable class PokedexViewModel
 {
-    var pokemonEntries = [PokemonEntry]()
+    private(set) var pokemonEntries = [PokemonEntry]()
     private var offset = 0
     
     init()
@@ -22,6 +22,18 @@ import Siesta
     {
         PokemonService.shared.pokemonEntries(for: offset ..< offset + 100).addObserver(self).loadIfNeeded()
     }
+    #if DEBUG
+    func filter()
+    {
+        var seen = Set<PokemonType>()
+        pokemonEntries = pokemonEntries.filter { entry in
+            guard let pokemon: Pokemon = PokemonService.shared.pokemon(for: entry).latestData?.typedContent() else { return false }
+            let result = !seen.contains(pokemon.type)
+            seen.insert(pokemon.type)
+            return result
+        }
+    }
+    #endif
 }
 
 extension PokedexViewModel: ResourceObserver

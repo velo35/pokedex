@@ -69,6 +69,13 @@ struct PokedexView: View
                     .padding([.bottom])
             }
             .navigationTitle("Pokemon")
+            #if DEBUG
+            .toolbar {
+                Button("Type filter") {
+                    viewModel.filter()
+                }
+            }
+            #endif
         }
         .sheet(isPresented: $detailShown) {
             selectedEntry = nil
