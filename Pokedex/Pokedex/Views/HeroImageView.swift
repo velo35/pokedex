@@ -10,16 +10,11 @@ import NukeUI
 
 struct HeroImageView: View 
 {
-    private var viewModel: PokemonViewModel
-    
-    init(entry: PokemonEntry)
-    {
-        self.viewModel = PokemonViewModel(entry)
-    }
+    let entry: PokemonEntry
     
     var body: some View
     {
-        LazyImage(url: viewModel.pokemon?.imageUrl) { state in
+        LazyImage(url: entry.pokemon?.imageUrl) { state in
             if let image = state.image {
                 image
                     .resizable()

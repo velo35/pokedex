@@ -21,11 +21,10 @@ struct PokemonDetailView: View
     
     @State var flavorText = ""
     @Binding var selectedEntry: PokemonEntry?
-    @State var pokemonViewModel: PokemonViewModel?
     
     let kContentMargins: CGFloat = 0
     
-    var color: Color { pokemonViewModel?.pokemon?.type.color ?? .gray }
+    var color: Color { selectedEntry?.pokemon?.type.color ?? .gray }
     
     @State var otherColor = Color.clear
     @State private var otherEntryAmount = 0.0
@@ -45,7 +44,7 @@ struct PokemonDetailView: View
                 Text(selectedEntry!.name.capitalized)
                     .font(.largeTitle.weight(.medium))
                 
-                Text(pokemonViewModel?.pokemon?.type.rawValue.capitalized ?? "")
+                Text(selectedEntry?.pokemon?.type.rawValue.capitalized ?? "")
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                     .padding(.vertical, 10)
@@ -53,7 +52,7 @@ struct PokemonDetailView: View
                     .background(Capsule().fill(color))
                 
                 
-                DetailStatsView(pokemon: pokemonViewModel?.pokemon ?? .empty)
+                DetailStatsView(pokemon: selectedEntry?.pokemon ?? .empty)
                 
                 Spacer()
                     .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
@@ -90,9 +89,6 @@ struct PokemonDetailView: View
             .scrollTargetBehavior(.viewAligned)
             .scrollIndicators(.hidden)
             .scrollPosition(id: $selectedEntry, anchor: .center)
-            .onChange(of: selectedEntry, initial: true) {
-                pokemonViewModel = PokemonViewModel(selectedEntry!)
-            }
             .coordinateSpace(.named(ScrollViewContentCoordinateSpace))
             .onPreferenceChange(ScrollViewContentBounds.self) { frame in
                 guard frame.width > 0 else { return }

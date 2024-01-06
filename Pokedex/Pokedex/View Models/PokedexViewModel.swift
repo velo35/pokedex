@@ -22,6 +22,7 @@ import Siesta
     {
         PokemonService.shared.pokemonEntries(for: offset ..< offset + 100).addObserver(self).loadIfNeeded()
     }
+    
     #if DEBUG
     func filter()
     {
@@ -40,13 +41,19 @@ extension PokedexViewModel: ResourceObserver
 {
     func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent) 
     {
-        setEntries(resource.typedContent())
+        addEntries(resource.typedContent())
     }
     
-    private func setEntries(_ entries: [PokemonEntry]?) {
+    private func addEntries(_ entries: [PokemonEntry]?) {
         guard let entries else { return }
         print("Received: \(entries.count)")
         self.pokemonEntries += entries
         self.offset += entries.count
+        
+        for entry in entries {
+            PokemonService.shared.pokemon(for: entry).addObserver(owner: entry, closure: { resource, event in
+                entry.pokemon = resource.typedContent()
+            }).loadIfNeeded()
+        }
     }
 }

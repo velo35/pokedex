@@ -10,23 +10,22 @@ import NukeUI
 
 struct PokemonCellView: View 
 {
-    @State var viewModel: PokemonViewModel
+    @State var entry: PokemonEntry
     
-    var pokemon: Pokemon? { viewModel.pokemon }
-    var color: Color { pokemon?.type.color ?? .gray }
+    var color: Color { entry.pokemon?.type.color ?? .gray }
     
     var body: some View
     {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text(pokemon?.name.capitalized ?? "")
+                Text(entry.pokemon?.name.capitalized ?? "")
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.top, 8)
                     .padding(.leading)
                 
                 HStack {
-                    Text(pokemon?.type.rawValue ?? "")
+                    Text(entry.pokemon?.type.rawValue ?? "")
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -37,7 +36,7 @@ struct PokemonCellView: View
                         }
                         .frame(width: 100, height: 24)
                     
-                    LazyImage(url: pokemon?.imageUrl) { state in
+                    LazyImage(url: entry.pokemon?.imageUrl) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -54,13 +53,13 @@ struct PokemonCellView: View
                     .padding([.bottom, .trailing], 4)
                 }
             }
-            .opacity(pokemon != nil ? 1 : 0)
+            .opacity(entry.pokemon != nil ? 1 : 0)
         }
         .background(color)
         .clipShape(.rect(cornerRadius: 12))
         .shadow(color: color, radius: 6)
         .overlay {
-            if pokemon == nil {
+            if entry.pokemon == nil {
                 ProgressView()
                     .scaleEffect(3)
             }
@@ -69,5 +68,5 @@ struct PokemonCellView: View
 }
 
 #Preview {
-    PokemonCellView(viewModel: PokemonViewModel(.bulbasaur))
+    PokemonCellView(entry: .bulbasaur)
 }
