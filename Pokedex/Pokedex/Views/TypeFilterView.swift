@@ -16,7 +16,7 @@ struct TypeFilterView: View
     
     var body: some View
     {
-        ZStack(alignment: .bottom) {
+        ZStack {
             VStack {
                 VStack(spacing: 6) {
                     ForEach(typeFilters) { type in
@@ -38,9 +38,9 @@ struct TypeFilterView: View
                 .padding(.bottom, 22)
                 .offset(y: typeFiltersShown ? 0 : 200)
                 .clipped()
-                
-                Spacer()
-                    .frame(height: 23)
+            }
+            .alignmentGuide(VerticalAlignment.center) { d in
+                d[.bottom]
             }
             
             Image(systemName: typeFilter == nil ? "line.3.horizontal.decrease.circle.fill" : "arrow.counterclockwise.circle.fill")
