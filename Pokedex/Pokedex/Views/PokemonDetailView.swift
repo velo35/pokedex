@@ -8,15 +8,19 @@
 import SwiftUI
 import SwiftyJSON
 
+fileprivate struct ScrollViewContentBounds: PreferenceKey
+{
+    static var defaultValue = CGRect.zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
+}
+
+fileprivate extension CoordinateSpace
+{
+    static var scrollView = Self.named("ScrollViewContentBounds")
+}
+
 struct PokemonDetailView: View 
 {
-    @Namespace var ScrollViewContentCoordinateSpace
-    private struct ScrollViewContentBounds: PreferenceKey
-    {
-        static var defaultValue = CGRect.zero
-        static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
-    }
-    
     @Environment(PokedexViewModel.self) var pokedexViewModel
     
     @State var flavorText = ""
@@ -32,14 +36,6 @@ struct PokemonDetailView: View
     var body: some View
     {
         ZStack(alignment: .bottom) {
-            Rectangle()
-                .fill(color.gradient)
-                .overlay {
-                    Rectangle()
-                        .fill(otherColor.gradient)
-                        .opacity(otherEntryAmount)
-                }
-            
             VStack {
                 Text(selectedEntry!.name.capitalized)
                     .font(.largeTitle.weight(.medium))
@@ -53,25 +49,20 @@ struct PokemonDetailView: View
                 
                 
                 DetailStatsView(pokemon: selectedEntry?.pokemon ?? .empty)
-                
-                Spacer()
-                    .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
             }
             .padding(.horizontal)
             .padding(.top, 50)
-            .background(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30))
-                .fill(.white))
+            .padding(.bottom, 100)
+            .background(.white)
+            .clipShape(.rect(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30)))
             
             ScrollView(.horizontal) {
-                LazyHStack(alignment: .top, spacing: 0) {
+                LazyHStack(spacing: 0) {
                     ForEach(pokedexViewModel.pokemonEntries) { entry in
-                        VStack {
-                            Spacer()
-                                .frame(height: 50)
-                            HeroImageView(entry: entry)
-                        }
-                        .containerRelativeFrame(.horizontal)
-                        .id(entry)
+                        HeroImageView(entry: entry)
+                            .containerRelativeFrame(.horizontal)
+                            .id(entry)
+                            .padding(.bottom, 390)
                     }
                 }
                 .scrollTargetLayout()
@@ -80,7 +71,7 @@ struct PokemonDetailView: View
                         Color.clear
                             .preference(
                                 key: ScrollViewContentBounds.self,
-                                value: proxy.frame(in: .named(ScrollViewContentCoordinateSpace))
+                                value: proxy.frame(in: .scrollView)
                             )
                     }
                 }
@@ -89,7 +80,7 @@ struct PokemonDetailView: View
             .scrollTargetBehavior(.viewAligned)
             .scrollIndicators(.hidden)
             .scrollPosition(id: $selectedEntry, anchor: .center)
-            .coordinateSpace(.named(ScrollViewContentCoordinateSpace))
+            .coordinateSpace(.scrollView)
             .onPreferenceChange(ScrollViewContentBounds.self) { frame in
                 guard frame.width > 0 else { return }
                 let contentOffsetX = -frame.origin.x
@@ -112,6 +103,15 @@ struct PokemonDetailView: View
                 otherColor = PokemonService.shared.latestPokemon(for: otherEntry)?.type.color ?? .clear
             }
         }
+        .background {
+            Rectangle()
+                .fill(color.gradient)
+                .overlay {
+                    Rectangle()
+                        .fill(otherColor.gradient)
+                        .opacity(otherEntryAmount)
+                }
+        }
         .task {
 //            print("starting task!")
 //            guard let (data, response) = try? await URLSession.shared.data(from: URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(pokemon.name)")!) else { print("!!! - fetch"); return }
@@ -124,8 +124,10 @@ struct PokemonDetailView: View
 }
 
 #Preview {
-    StatefulPreviewWrapper(PokemonEntry.bulbasaur) {
+    StatefulPreviewWrapper(PokemonEntry.squirtle) {
         PokemonDetailView(selectedEntry: $0)
             .environment(PokedexViewModel())
     }
+//    PokemonDetailView(selectedEntry: .constant(.squirtle))
+//        .environment(PokedexViewModel())
 }

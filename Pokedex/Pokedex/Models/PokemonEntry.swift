@@ -30,8 +30,3 @@ import Foundation
         lhs.id == rhs.id
     }
 }
-
-extension PokemonEntry
-{
-    static let bulbasaur = PokemonEntry(name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
-}

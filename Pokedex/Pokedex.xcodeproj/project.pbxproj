@@ -25,6 +25,7 @@
 		BE6D914C2B30D3A400964BEB /* Siesta_Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BE6D914B2B30D3A400964BEB /* Siesta_Alamofire */; };
 		BE9DBC512B31014D00123162 /* PokedexViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9DBC502B31014D00123162 /* PokedexViewModel.swift */; };
 		BE9DBC562B312EE500123162 /* PokemonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9DBC552B312EE500123162 /* PokemonDetailView.swift */; };
+		BEA821A82B4A554D00835E26 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA821A72B4A554D00835E26 /* PreviewData.swift */; };
 		BED73DEB2B40EA57003E2600 /* StatefulPreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED73DEA2B40EA57003E2600 /* StatefulPreviewWrapper.swift */; };
 		BEFA5C5D2B2FE6BD005D887E /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C5C2B2FE6BD005D887E /* Nuke */; };
 		BEFA5C5F2B2FE6BD005D887E /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C5E2B2FE6BD005D887E /* NukeExtensions */; };
@@ -48,6 +49,7 @@
 		BE5B4E042B38EEA200DD4AA4 /* PokemonEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonEntry.swift; sourceTree = "<group>"; };
 		BE9DBC502B31014D00123162 /* PokedexViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexViewModel.swift; sourceTree = "<group>"; };
 		BE9DBC552B312EE500123162 /* PokemonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailView.swift; sourceTree = "<group>"; };
+		BEA821A72B4A554D00835E26 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		BED73DEA2B40EA57003E2600 /* StatefulPreviewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulPreviewWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				BE4FF6D42B2BC6CC00DD2DEC /* Preview Assets.xcassets */,
+				BEA821A72B4A554D00835E26 /* PreviewData.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				BE2C59002B32464500500E55 /* PokemonTypeExtensions.swift in Sources */,
 				BE4FF6E22B2BD42F00DD2DEC /* Pokemon.swift in Sources */,
 				BE9DBC562B312EE500123162 /* PokemonDetailView.swift in Sources */,
+				BEA821A82B4A554D00835E26 /* PreviewData.swift in Sources */,
 				BE4FF6CE2B2BC6CB00DD2DEC /* PokedexApp.swift in Sources */,
 				BED73DEB2B40EA57003E2600 /* StatefulPreviewWrapper.swift in Sources */,
 				BE0ED96A2B3DAAA5009057F3 /* HeroImageView.swift in Sources */,

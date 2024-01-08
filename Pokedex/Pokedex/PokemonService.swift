@@ -52,7 +52,7 @@ extension PokemonEntry
 
 extension Pokemon
 {
-    convenience init(from json: JSON)
+    init(from json: JSON)
     {
         guard let name = json["name"].string else { fatalError("name") }
         guard let typeString = json["types", 0, "type", "name"].string else { fatalError("\(name): typeString") }

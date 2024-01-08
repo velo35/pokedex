@@ -31,7 +31,7 @@ enum PokemonType: String
     case shadow
 }
 
-@Observable class Pokemon
+struct Pokemon
 {
     let name: String
     let type: PokemonType
