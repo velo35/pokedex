@@ -32,6 +32,8 @@ class PokemonService: Service
         configureTransformer("/pokemon/*") { entity -> Pokemon in
             Pokemon(from: entity.content)
         }
+        
+//        SiestaLog.Category.enabled = .all
     }
     
     func pokemonEntries(for range: Range<Int>) -> Resource { resource("/pokemon").withParams(["offset" : "\(range.lowerBound)", "limit": "\(range.upperBound - range.lowerBound)"]) }
