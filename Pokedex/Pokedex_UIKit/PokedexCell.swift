@@ -6,10 +6,15 @@
 //
 
 import UIKit
-import Observation
+import Siesta
 
-class PokedexCell: UICollectionViewCell
+class PokedexCell: UICollectionViewCell, ResourceObserver
 {
+    func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent) 
+    {
+        self.image.image = resource.typedContent()
+    }
+    
     let background = {
         let background = UIView(frame: CGRect(x: 0, y: 0, width: 180, height: 100))
         background.layer.cornerRadius = 6
@@ -69,6 +74,7 @@ class PokedexCell: UICollectionViewCell
         self.name.text = pokemon.name.capitalized
         self.background.backgroundColor = UIColor(pokemon.type.color)
         self.type.text = pokemon.type.rawValue
+        PokemonService.shared.image(for: pokemon).addObserver(self).loadIfNeeded()
     }
 }
 

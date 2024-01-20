@@ -42,18 +42,7 @@ struct Pokemon
     let defense: Int
     let speed: Int
     let weight: Int
-    let imageUrl: URL?
-    
-    init(name: String, type: PokemonType, height: Int, attack: Int, defense: Int, speed: Int, weight: Int, imageUrl: URL?) {
-        self.name = name
-        self.type = type
-        self.height = height
-        self.attack = attack
-        self.defense = defense
-        self.speed = speed
-        self.weight = weight
-        self.imageUrl = imageUrl
-    }
+    let imageUrl: URL
 }
 
 extension Pokemon
@@ -67,5 +56,5 @@ extension Pokemon
                                    weight: 69,
                                    imageUrl: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png")!)
     
-    static let empty = Pokemon(name: "", type: .unknown, height: 0, attack: 0, defense: 0, speed: 0, weight: 0, imageUrl: nil)
+    static let empty = Pokemon(name: "", type: .unknown, height: 0, attack: 0, defense: 0, speed: 0, weight: 0, imageUrl: URL(string: "")!)
 }
