@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-extension PokemonType: Identifiable
-{
-    var id: PokemonType {
-        self
-    }
-}
-
 extension PokemonType
 {
     var color: Color

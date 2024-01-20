@@ -15,7 +15,7 @@ class ViewController: UICollectionViewController
     {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 180, height: 100)
-        flowLayout.minimumInteritemSpacing = 16
+        flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 16
         flowLayout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         super.init(collectionViewLayout: flowLayout)
@@ -25,19 +25,30 @@ class ViewController: UICollectionViewController
         fatalError("init(coder:) has not been implemented")
     }
     
+    var entryIndexPath = [PokemonEntry: IndexPath]()
+    
     override func viewDidLoad() 
     {
         super.viewDidLoad()
         
         let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() {
+            [unowned self]
             cell, indexPath, entry in
-            cell.configure(with: entry.pokemon)
+            entryIndexPath[entry] = indexPath
+            if let pokemon = entry.pokemon {
+                cell.configure(with: pokemon)
+            }
         }
         
         self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: self.collectionView) {
             collectionView, indexPath, entry in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: entry)
+            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: entry)
         }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) 
+    {
+        
     }
     
     override func viewWillAppear(_ animated: Bool) 
@@ -63,9 +74,14 @@ class ViewController: UICollectionViewController
         
         for entry in entries {
             PokemonService.shared.pokemon(for: entry).addObserver(owner: self, closure: {
+                [unowned self]
                 resource, event in
                 entry.pokemon = resource.typedContent()
-//                var
+                if let indexPath = self.entryIndexPath[entry], 
+                    let pokemon = entry.pokemon,
+                    let cell = self.collectionView.cellForItem(at: indexPath) as? PokedexCell {
+                    cell.configure(with: pokemon)
+                }
             }).loadIfNeeded()
         }
     }

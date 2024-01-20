@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PokemonType: String
+enum PokemonType: String, Identifiable
 {
     case normal
     case fighting
@@ -29,6 +29,8 @@ enum PokemonType: String
     case fairy
     case unknown
     case shadow
+    
+    var id: PokemonType { self }
 }
 
 struct Pokemon
