@@ -10,7 +10,7 @@ import UIKit
 
 struct DetailStatsView: View 
 {
-    var pokemon: Pokemon
+    var pokemon: Pokemon?
     
     private let max = 150
     
@@ -24,6 +24,12 @@ struct DetailStatsView: View
         ("weight", \Pokemon.weight, Color.purple)
     ]
     
+    func amount(for keyPath: KeyPath<Pokemon, Int>) -> Int
+    {
+        guard let pokemon else { return 0}
+        return pokemon[keyPath: keyPath]
+    }
+    
     func row(_ stat: Stat) -> some View
     {
         GridRow {
@@ -33,7 +39,7 @@ struct DetailStatsView: View
             ZStack {
                 Text("00000")
                     .hidden()
-                Text("\(pokemon[keyPath: stat.keyPath])")
+                Text("\(amount(for: stat.keyPath))")
                     .fontWeight(.semibold)
             }
             
@@ -42,8 +48,8 @@ struct DetailStatsView: View
                 GeometryReader { geometry in
                     Capsule()
                         .fill(stat.color.gradient)
-                        .frame(width: geometry.size.width * CGFloat(pokemon[keyPath: stat.keyPath]) / CGFloat(max))
-                        .animation(.default, value: pokemon[keyPath: stat.keyPath])
+                        .frame(width: geometry.size.width * CGFloat(amount(for: stat.keyPath)) / CGFloat(max))
+                        .animation(.default, value: amount(for: stat.keyPath))
                 }
             }
             .frame(height: 26)

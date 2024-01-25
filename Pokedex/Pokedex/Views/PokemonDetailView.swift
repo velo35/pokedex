@@ -48,7 +48,7 @@ struct PokemonDetailView: View
                     .background(Capsule().fill(color))
                 
                 
-                DetailStatsView(pokemon: selectedEntry?.pokemon ?? .empty)
+                DetailStatsView(pokemon: selectedEntry?.pokemon)
             }
             .padding(.horizontal)
             .padding(.top, 50)
@@ -100,7 +100,7 @@ struct PokemonDetailView: View
                     otherEntry = pokedexViewModel.pokemonEntries[selectedIndex - 1]
                     otherEntryAmount = (1.0 - offsetAmount)
                 }
-                otherColor = PokemonService.shared.latestPokemon(for: otherEntry)?.type.color ?? .clear
+//                otherColor = PokemonService.shared.latestPokemon(for: otherEntry)?.type.color ?? .clear
             }
         }
         .background {

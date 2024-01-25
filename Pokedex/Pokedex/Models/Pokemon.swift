@@ -55,6 +55,4 @@ extension Pokemon
                                    speed: 45,
                                    weight: 69,
                                    imageUrl: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png")!)
-    
-    static let empty = Pokemon(name: "", type: .unknown, height: 0, attack: 0, defense: 0, speed: 0, weight: 0, imageUrl: URL(string: "")!)
 }
