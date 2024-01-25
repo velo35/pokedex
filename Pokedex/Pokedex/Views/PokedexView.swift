@@ -30,58 +30,54 @@ struct PokedexView: View
     
     var body: some View
     {
-        NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVGrid(columns: gridItems, spacing: 16) {
-                            ForEach(filteredPokemonEntries) { entry in
-                                PokemonCellView(entry: entry)
-                                    .onTapGesture {
-                                        selectedEntry = entry
-                                        detailShown = true
-                                    }
-                                    .matchedGeometryEffect(id: entry.name, in: animation)
-                                    .id(entry)
-                            }
-                        }
-                        Button {
-                            viewModel.fetchMore()
-                        } label: {
-                            Text("Load More")
-                                .foregroundStyle(.white)
-                                .padding(.horizontal)
-                                .padding(.vertical, 6)
-                                .background {
-                                    Color.blue
-                                        .clipShape(.rect(cornerRadius: 10))
+        ZStack(alignment: .bottomTrailing) {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVGrid(columns: gridItems, spacing: 16) {
+                        ForEach(filteredPokemonEntries) { entry in
+                            PokemonCellView(entry: entry)
+                                .onTapGesture {
+                                    selectedEntry = entry
+                                    detailShown = true
                                 }
+                                .matchedGeometryEffect(id: entry.name, in: animation)
+                                .id(entry)
                         }
                     }
-                    .onChange(of: selectedEntry) {
-                        proxy.scrollTo(selectedEntry, anchor: .center)
+                    Button {
+                        viewModel.fetchMore()
+                    } label: {
+                        Text("Load More")
+                            .foregroundStyle(.white)
+                            .padding(.horizontal)
+                            .padding(.vertical, 6)
+                            .background {
+                                Color.blue
+                                    .clipShape(.rect(cornerRadius: 10))
+                            }
                     }
                 }
-                
-                TypeFilterView(typeFilter: $typeFilter)
-                    .padding([.bottom, .trailing])
-                    .padding([.bottom])
-            }
-            .navigationTitle("Pokemon")
-            #if DEBUG
-            .toolbar {
-                Button("Type filter") {
-                    viewModel.filter()
+                .onChange(of: selectedEntry) {
+                    proxy.scrollTo(selectedEntry, anchor: .center)
                 }
             }
-            #endif
+            
+            TypeFilterView(typeFilter: $typeFilter)
+                .padding([.bottom, .trailing])
+                .padding([.bottom])
         }
         .sheet(isPresented: $detailShown) {
             selectedEntry = nil
         } content: {
             PokemonDetailView(selectedEntry: $selectedEntry)
         }
+//            #if DEBUG
+//            .toolbar {
+//                Button("Type filter") {
+//                    viewModel.filter()
+//                }
+//            }
+//            #endif
     }
 }
 
