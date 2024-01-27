@@ -17,18 +17,13 @@ struct SideMenuView<Main: View, Side: View>: View
     
     var body: some View
     {
-//        GeometryReader { proxy in
+        ZStack(alignment: .leading) {
+            side
+                .frame(width: amount)
+                .safeAreaPadding(.top, 150)
+            
             ZStack(alignment: .topLeading) {
-                side
-                    .frame(width: amount)
-                    .safeAreaPadding(.top, 150)
-                
                 main
-//                    .alignmentGuide(.leading) { d in
-//                        d[.leading] + (reveal ? -amount : 0)
-//                    }
-                    .offset(x: reveal ? amount : 0)
-                    .animation(.default, value: reveal)
                 
                 Button {
                     reveal.toggle()
@@ -43,15 +38,15 @@ struct SideMenuView<Main: View, Side: View>: View
                                 .stroke(.gray.opacity(0.8), lineWidth: 2)
                         }
                 }
-//                .ignoresSafeArea()
-//                .safeAreaPadding(20)
                 .padding(.leading, 6)
-//                .padding(.top, -10)
                 .safeAreaPadding(.top, 50)
             }
-//        }
+//            .gesture(TapGesture(count: 1).onEnded{ print("hey") }, including: .none)
+            .offset(x: reveal ? amount : 0)
+            .animation(.default, value: reveal)
+            .gesture(LongPressGesture(minimumDuration: 0.1).onEnded{ _ in reveal = false }, including: reveal ? .gesture : .subviews)
+        }
         .ignoresSafeArea()
-//        .background(.yellow)
     }
 }
 

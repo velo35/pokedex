@@ -9,15 +9,18 @@ import SwiftUI
 
 struct OptionsPanel: View 
 {
+    @Binding var mode: UIMode?
+    
     var body: some View
     {
-        List {
-            Text("SwiftUI")
-            Text("UIKit")
+        List(selection: $mode) {
+            ForEach(UIMode.allCases) {
+                Text($0.rawValue)
+            }
         }
     }
 }
 
 #Preview {
-    OptionsPanel()
+    OptionsPanel(mode: .constant(UIMode.swiftUI))
 }
