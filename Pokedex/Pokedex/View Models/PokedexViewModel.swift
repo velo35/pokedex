@@ -11,6 +11,8 @@ import Siesta
 @Observable class PokedexViewModel
 {
     private(set) var pokemonEntries = [PokemonEntry]()
+    private(set) var pokemonCache = [PokemonEntry: Pokemon]()
+    
     private var offset = 0
     
     init()
@@ -51,8 +53,8 @@ extension PokedexViewModel: ResourceObserver
         self.offset += entries.count
         
         for entry in entries {
-            PokemonService.shared.pokemon(for: entry).addObserver(owner: entry, closure: { resource, event in
-                entry.pokemon = resource.typedContent()
+            PokemonService.shared.pokemon(for: entry).addObserver(owner: self, closure: { resource, event in
+                self.pokemonCache[entry] = resource.typedContent()
             }).loadIfNeeded()
         }
     }

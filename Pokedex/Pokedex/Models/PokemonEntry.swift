@@ -7,11 +7,10 @@
 
 import Foundation
 
-@Observable class PokemonEntry: Identifiable, Hashable
+struct PokemonEntry: Identifiable, Hashable
 {
     let name: String
     let url: URL
-    var pokemon: Pokemon?
     
     init(name: String, url: URL) {
         self.name = name
@@ -19,14 +18,4 @@ import Foundation
     }
     
     var id: URL { url }
-    
-    func hash(into hasher: inout Hasher)
-    {
-        hasher.combine(self.id)
-    }
-    
-    static func == (lhs: PokemonEntry, rhs: PokemonEntry) -> Bool 
-    {
-        lhs.id == rhs.id
-    }
 }

@@ -35,13 +35,19 @@ struct PokedexView: View
                 ScrollView {
                     LazyVGrid(columns: gridItems, spacing: 16) {
                         ForEach(filteredPokemonEntries) { entry in
-                            PokemonCellView(entry: entry)
-                                .onTapGesture {
-                                    selectedEntry = entry
-                                    detailShown = true
-                                }
-                                .matchedGeometryEffect(id: entry.name, in: animation)
-                                .id(entry)
+                            if let pokemon = viewModel.pokemonCache[entry] {
+                                PokemonCellView(pokemon: pokemon)
+                                    .onTapGesture {
+                                        selectedEntry = entry
+                                        detailShown = true
+                                    }
+                                    .matchedGeometryEffect(id: entry.name, in: animation)
+                                    .id(entry)
+                            }
+                            else {
+                                ProgressView()
+                                    .scaleEffect(3)
+                            }
                         }
                     }
                     Button {

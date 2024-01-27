@@ -10,11 +10,11 @@ import NukeUI
 
 struct HeroImageView: View 
 {
-    let entry: PokemonEntry
+    let pokemon: Pokemon
     
     var body: some View
     {
-        LazyImage(url: entry.pokemon?.imageUrl) { state in
+        LazyImage(url: pokemon.imageUrl) { state in
             if let image = state.image {
                 image
                     .resizable()
@@ -25,5 +25,5 @@ struct HeroImageView: View
 }
 
 #Preview {
-    HeroImageView(entry: .bulbasaur)
+    HeroImageView(pokemon: .bulbasaur)
 }

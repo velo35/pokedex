@@ -10,6 +10,7 @@ import UIKit
 class PokedexViewController: UICollectionViewController 
 {
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
+    var pokemonCache = [PokemonEntry: Pokemon]()
     
     init()
     {
@@ -35,7 +36,7 @@ class PokedexViewController: UICollectionViewController
             [unowned self]
             cell, indexPath, entry in
             entryIndexPath[entry] = indexPath
-            if let pokemon = entry.pokemon {
+            if let pokemon = self.pokemonCache[entry] {
                 cell.configure(with: pokemon)
             }
         }
@@ -76,9 +77,9 @@ class PokedexViewController: UICollectionViewController
             PokemonService.shared.pokemon(for: entry).addObserver(owner: self, closure: {
                 [unowned self]
                 resource, event in
-                entry.pokemon = resource.typedContent()
-                if let indexPath = self.entryIndexPath[entry], 
-                    let pokemon = entry.pokemon,
+                self.pokemonCache[entry] = resource.typedContent()
+                if let indexPath = self.entryIndexPath[entry],
+                    let pokemon = self.pokemonCache[entry],
                     let cell = self.collectionView.cellForItem(at: indexPath) as? PokedexCell {
                     cell.configure(with: pokemon)
                 }

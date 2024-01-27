@@ -10,7 +10,7 @@ import UIKit
 
 struct DetailStatsView: View 
 {
-    var pokemon: Pokemon?
+    let pokemon: Pokemon
     
     private let max = 150
     
@@ -26,7 +26,6 @@ struct DetailStatsView: View
     
     func amount(for keyPath: KeyPath<Pokemon, Int>) -> Int
     {
-        guard let pokemon else { return 0}
         return pokemon[keyPath: keyPath]
     }
     

@@ -45,7 +45,7 @@ class PokemonService: Service
 
 extension PokemonEntry
 {
-    convenience init(from json: JSON) 
+    init(from json: JSON) 
     {
         guard let name = json["name"].string else { fatalError("name") }
         guard let url = json["url"].url else { fatalError("url") }

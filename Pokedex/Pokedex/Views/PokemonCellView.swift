@@ -10,22 +10,20 @@ import NukeUI
 
 struct PokemonCellView: View 
 {
-    @State var entry: PokemonEntry
-    
-    var color: Color { entry.pokemon?.type.color ?? .gray }
+    let pokemon: Pokemon
     
     var body: some View
     {
         ZStack {
             VStack(alignment: .leading, spacing: 0) {
-                Text(entry.pokemon?.name.capitalized ?? "")
+                Text(pokemon.name.capitalized)
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.top, 8)
                     .padding(.leading)
                 
                 HStack {
-                    Text(entry.pokemon?.type.rawValue ?? "")
+                    Text(pokemon.type.rawValue)
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -36,7 +34,7 @@ struct PokemonCellView: View
                         }
                         .frame(width: 100, height: 24)
                     
-                    LazyImage(url: entry.pokemon?.imageUrl) { state in
+                    LazyImage(url: pokemon.imageUrl) { state in
                         if let image = state.image {
                             image
                                 .resizable()
@@ -53,20 +51,13 @@ struct PokemonCellView: View
                     .padding([.bottom, .trailing], 4)
                 }
             }
-            .opacity(entry.pokemon != nil ? 1 : 0)
         }
-        .background(color)
+        .background(pokemon.type.color)
         .clipShape(.rect(cornerRadius: 12))
-        .shadow(color: color, radius: 6)
-        .overlay {
-            if entry.pokemon == nil {
-                ProgressView()
-                    .scaleEffect(3)
-            }
-        }
+        .shadow(color: pokemon.type.color, radius: 6)
     }
 }
 
 #Preview {
-    PokemonCellView(entry: .bulbasaur)
+    PokemonCellView(pokemon: .bulbasaur)
 }

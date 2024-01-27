@@ -21,14 +21,22 @@ fileprivate extension CoordinateSpace
 
 struct PokemonDetailView: View 
 {
-    @Environment(PokedexViewModel.self) var pokedexViewModel
+    @Environment(PokedexViewModel.self) var viewModel
     
     @State var flavorText = ""
     @Binding var selectedEntry: PokemonEntry?
     
     let kContentMargins: CGFloat = 0
     
-    var color: Color { selectedEntry?.pokemon?.type.color ?? .gray }
+    var color: Color {
+        guard let selectedEntry, let pokemon = self.viewModel.pokemonCache[selectedEntry] else { return .gray }
+        return pokemon.type.color
+    }
+    
+    var pokemonType: String {
+        guard let selectedEntry, let pokemon = self.viewModel.pokemonCache[selectedEntry] else { return "" }
+        return pokemon.type.rawValue.capitalized
+    }
     
     @State var otherColor = Color.clear
     @State private var otherEntryAmount = 0.0
@@ -40,15 +48,16 @@ struct PokemonDetailView: View
                 Text(selectedEntry!.name.capitalized)
                     .font(.largeTitle.weight(.medium))
                 
-                Text(selectedEntry?.pokemon?.type.rawValue.capitalized ?? "")
+                Text(pokemonType)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 26)
                     .background(Capsule().fill(color))
                 
-                
-                DetailStatsView(pokemon: selectedEntry?.pokemon)
+                if let selectedEntry, let pokemon = viewModel.pokemonCache[selectedEntry] {
+                    DetailStatsView(pokemon: pokemon)
+                }
             }
             .padding(.horizontal)
             .padding(.top, 50)
@@ -58,7 +67,7 @@ struct PokemonDetailView: View
             
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
-                    ForEach(pokedexViewModel.pokemonEntries) { entry in
+                    ForEach(viewModel.pokemonEntries) { entry in
                         HeroImageView(entry: entry)
                             .containerRelativeFrame(.horizontal)
                             .id(entry)
@@ -84,20 +93,20 @@ struct PokemonDetailView: View
             .onPreferenceChange(ScrollViewContentBounds.self) { frame in
                 guard frame.width > 0 else { return }
                 let contentOffsetX = -frame.origin.x
-                let entriesCount = pokedexViewModel.pokemonEntries.count
+                let entriesCount = viewModel.pokemonEntries.count
                 let entryOffset = CGFloat(entriesCount) * contentOffsetX / frame.width
                 guard let selectedEntry,
-                      let selectedIndex = pokedexViewModel.pokemonEntries.firstIndex(of: selectedEntry),
+                      let selectedIndex = viewModel.pokemonEntries.firstIndex(of: selectedEntry),
                       selectedIndex > 0 && selectedIndex < entriesCount - 1 else { otherColor = .clear; return }
                 
                 let offsetAmount = entryOffset.truncatingRemainder(dividingBy: 1)
                 let otherEntry: PokemonEntry
                 if offsetAmount < 0.5 {
-                    otherEntry = pokedexViewModel.pokemonEntries[selectedIndex + 1]
+                    otherEntry = viewModel.pokemonEntries[selectedIndex + 1]
                     otherEntryAmount = offsetAmount
                 }
                 else {
-                    otherEntry = pokedexViewModel.pokemonEntries[selectedIndex - 1]
+                    otherEntry = viewModel.pokemonEntries[selectedIndex - 1]
                     otherEntryAmount = (1.0 - offsetAmount)
                 }
 //                otherColor = PokemonService.shared.latestPokemon(for: otherEntry)?.type.color ?? .clear
@@ -129,5 +138,5 @@ struct PokemonDetailView: View
             .environment(PokedexViewModel())
     }
 //    PokemonDetailView(selectedEntry: .constant(.squirtle))
-//        .environment(PokedexViewModel())
+//        .environment(viewModel())
 }
