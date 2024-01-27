@@ -28,7 +28,7 @@ struct ContentView: View
                         .navigationTitle("Pokemon")
                 }
                 else {
-                    ViewControllerView()
+                    PokedexViewControllerView()
                 }
             },
             side: OptionsPanel(

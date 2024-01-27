@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UICollectionViewController 
+class PokedexViewController: UICollectionViewController 
 {
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
     
