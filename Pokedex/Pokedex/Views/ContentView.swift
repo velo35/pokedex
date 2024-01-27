@@ -28,7 +28,7 @@ struct ContentView: View
                         .navigationTitle("Pokemon")
                 }
                 else {
-                    Text("hey!")
+                    ViewControllerView()
                 }
             },
             side: OptionsPanel(
