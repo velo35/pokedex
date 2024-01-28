@@ -24,7 +24,8 @@ struct PokedexView: View
     {
         guard let typeFilter else { return viewModel.pokemonEntries }
         return viewModel.pokemonEntries.filter { entry in
-            (PokemonService.shared.pokemon(for: entry).latestData?.content as? Pokemon)?.type == typeFilter
+            guard let pokemon = self.viewModel.pokemonCache[entry] else { return false }
+            return pokemon.type == typeFilter
         }
     }
     
@@ -43,6 +44,11 @@ struct PokedexView: View
                                     }
                                     .matchedGeometryEffect(id: entry.name, in: animation)
                                     .id(entry)
+                                    .sheet(isPresented: $detailShown) {
+                                        selectedEntry = nil
+                                    } content: {
+                                        PokemonDetailView(pokemon: pokemon, selectedEntry: $selectedEntry)
+                                    }
                             }
                             else {
                                 ProgressView()
@@ -77,11 +83,6 @@ struct PokedexView: View
             TypeFilterView(typeFilter: $typeFilter)
                 .padding([.bottom, .trailing])
                 .padding([.bottom])
-        }
-        .sheet(isPresented: $detailShown) {
-            selectedEntry = nil
-        } content: {
-            PokemonDetailView(selectedEntry: $selectedEntry)
         }
 //            #if DEBUG
 //            .toolbar {

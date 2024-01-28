@@ -23,14 +23,11 @@ struct PokemonDetailView: View
 {
     @Environment(PokedexViewModel.self) var viewModel
     
-    @State var flavorText = ""
+//    @State var flavorText = ""
+    @State var pokemon: Pokemon
     @Binding var selectedEntry: PokemonEntry?
     
     let kContentMargins: CGFloat = 0
-    
-    var pokemon: Pokemon {
-        self.viewModel.pokemonCache[self.selectedEntry!]!
-    }
     
     @State var otherColor = Color.clear
     @State private var otherEntryAmount = 0.0
@@ -103,6 +100,10 @@ struct PokemonDetailView: View
                 }
 //                otherColor = PokemonService.shared.latestPokemon(for: otherEntry)?.type.color ?? .clear
             }
+            .onChange(of: selectedEntry) {
+                guard let selectedEntry, let pokemon = self.viewModel.pokemonCache[selectedEntry] else { return }
+                self.pokemon = pokemon
+            }
         }
         .background {
             Rectangle()
@@ -126,8 +127,8 @@ struct PokemonDetailView: View
 }
 
 #Preview {
-    StatefulPreviewWrapper(PokemonEntry.squirtle) {
-        PokemonDetailView(selectedEntry: $0)
+    StatefulPreviewWrapper(PokemonEntry.bulbasaur) {
+        PokemonDetailView(pokemon: .bulbasaur, selectedEntry: $0)
             .environment(PokedexViewModel())
     }
 //    PokemonDetailView(selectedEntry: .constant(.squirtle))
