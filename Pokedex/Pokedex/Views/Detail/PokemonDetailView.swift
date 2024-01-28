@@ -28,14 +28,8 @@ struct PokemonDetailView: View
     
     let kContentMargins: CGFloat = 0
     
-    var color: Color {
-        guard let selectedEntry, let pokemon = self.viewModel.pokemonCache[selectedEntry] else { return .gray }
-        return pokemon.type.color
-    }
-    
-    var pokemonType: String {
-        guard let selectedEntry, let pokemon = self.viewModel.pokemonCache[selectedEntry] else { return "" }
-        return pokemon.type.rawValue.capitalized
+    var pokemon: Pokemon {
+        self.viewModel.pokemonCache[self.selectedEntry!]!
     }
     
     @State var otherColor = Color.clear
@@ -45,19 +39,17 @@ struct PokemonDetailView: View
     {
         ZStack(alignment: .bottom) {
             VStack {
-                Text(selectedEntry!.name.capitalized)
+                Text(pokemon.name.capitalized)
                     .font(.largeTitle.weight(.medium))
                 
-                Text(pokemonType)
+                Text(pokemon.type.rawValue.capitalized)
                     .fontWeight(.semibold)
                     .foregroundStyle(.white)
                     .padding(.vertical, 10)
                     .padding(.horizontal, 26)
-                    .background(Capsule().fill(color))
+                    .background(Capsule().fill(pokemon.type.color))
                 
-                if let selectedEntry, let pokemon = viewModel.pokemonCache[selectedEntry] {
-                    DetailStatsView(pokemon: pokemon)
-                }
+                DetailStatsView(pokemon: pokemon)
             }
             .padding(.horizontal)
             .padding(.top, 50)
@@ -68,7 +60,7 @@ struct PokemonDetailView: View
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
                     ForEach(viewModel.pokemonEntries) { entry in
-                        HeroImageView(entry: entry)
+                        HeroImageView(pokemon: viewModel.pokemonCache[entry]!)
                             .containerRelativeFrame(.horizontal)
                             .id(entry)
                             .padding(.bottom, 390)
@@ -114,7 +106,7 @@ struct PokemonDetailView: View
         }
         .background {
             Rectangle()
-                .fill(color.gradient)
+                .fill(pokemon.type.color.gradient)
                 .overlay {
                     Rectangle()
                         .fill(otherColor.gradient)
@@ -122,13 +114,14 @@ struct PokemonDetailView: View
                 }
         }
         .task {
-//            print("starting task!")
-//            guard let (data, response) = try? await URLSession.shared.data(from: URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(pokemon.name)")!) else { print("!!! - fetch"); return }
-//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { print("!!! - response"); return }
-//            guard let json = try? JSON(data: data) else { print("!!! - json"); return }
-//            guard let flavor_text = json["flavor_text_entries", 0, "flavor_text"].string else { print("!!! - flavor_text"); return }
-//            flavorText = flavor_text
+        //            print("starting task!")
+        //            guard let (data, response) = try? await URLSession.shared.data(from: URL(string: "https://pokeapi.co/api/v2/pokemon-species/\(pokemon.name)")!) else { print("!!! - fetch"); return }
+        //            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { print("!!! - response"); return }
+        //            guard let json = try? JSON(data: data) else { print("!!! - json"); return }
+        //            guard let flavor_text = json["flavor_text_entries", 0, "flavor_text"].string else { print("!!! - flavor_text"); return }
+        //            flavorText = flavor_text
         }
+
     }
 }
 

@@ -47,6 +47,12 @@ struct PokedexView: View
                             else {
                                 ProgressView()
                                     .scaleEffect(3)
+                                    .frame(width: 180, height: 100)
+                                    .background {
+                                        Color.gray
+                                    }
+                                    .clipShape(.rect(cornerRadius: 12))
+                                    .shadow(color: .gray, radius: 6)
                             }
                         }
                     }
