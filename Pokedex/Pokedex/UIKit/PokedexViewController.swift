@@ -7,30 +7,23 @@
 
 import UIKit
 
-class PokedexViewController: UICollectionViewController 
+class PokedexViewController: UIViewController
 {
+    var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
     var pokemonCache = [PokemonEntry: Pokemon]()
+    var entryIndexPath = [PokemonEntry: IndexPath]()
     
-    init()
+    override func loadView() 
     {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: 180, height: 100)
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 16
         flowLayout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        super.init(collectionViewLayout: flowLayout)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    var entryIndexPath = [PokemonEntry: IndexPath]()
-    
-    override func viewDidLoad() 
-    {
-        super.viewDidLoad()
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        self.collectionView = collectionView
         
         let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() {
             [unowned self]
@@ -41,15 +34,12 @@ class PokedexViewController: UICollectionViewController
             }
         }
         
-        self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: self.collectionView) {
+        self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: collectionView) {
             collectionView, indexPath, entry in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: entry)
         }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) 
-    {
         
+        self.view = ScrubbyView(collectionView)
     }
     
     override func viewWillAppear(_ animated: Bool) 

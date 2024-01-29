@@ -31,7 +31,7 @@ class PokedexCell: UICollectionViewCell, ResourceObserver
     }()
     
     let type = {
-        let type = UILabel(frame: CGRect(x: 16, y: 32, width: 80, height: 24))
+        let type = UILabel(frame: CGRect(x: 16, y: 42, width: 80, height: 24))
         type.textAlignment = .center
         type.font = .systemFont(ofSize: 15, weight: .bold)
         type.textColor = .white
@@ -39,7 +39,7 @@ class PokedexCell: UICollectionViewCell, ResourceObserver
     }()
     
     let typeBackground = {
-        let typeBackground = UIView(frame: CGRect(x: 16, y: 32, width: 80, height: 24))
+        let typeBackground = UIView(frame: CGRect(x: 16, y: 42, width: 80, height: 24))
         typeBackground.layer.cornerRadius = 12
         typeBackground.backgroundColor = .white.withAlphaComponent(0.25)
         return typeBackground

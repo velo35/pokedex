@@ -37,6 +37,7 @@
 		BEFA5C5F2B2FE6BD005D887E /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C5E2B2FE6BD005D887E /* NukeExtensions */; };
 		BEFA5C612B2FE6BD005D887E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C602B2FE6BD005D887E /* NukeUI */; };
 		BEFA5C632B2FE6BD005D887E /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = BEFA5C622B2FE6BD005D887E /* NukeVideo */; };
+		BEFA9FB12B65EECD005264E2 /* ScrubbyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEFA9FB02B65EECD005264E2 /* ScrubbyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		BE9DBC552B312EE500123162 /* PokemonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetailView.swift; sourceTree = "<group>"; };
 		BEA821A72B4A554D00835E26 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		BED73DEA2B40EA57003E2600 /* StatefulPreviewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulPreviewWrapper.swift; sourceTree = "<group>"; };
+		BEFA9FB02B65EECD005264E2 /* ScrubbyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrubbyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				BE4836992B5749E8007BEB58 /* PokedexViewController.swift */,
+				BEFA9FB02B65EECD005264E2 /* ScrubbyView.swift */,
 				BE538CD52B57549C0075DA3D /* PokedexCell.swift */,
 			);
 			path = UIKit;
@@ -303,6 +306,7 @@
 				BEA821A82B4A554D00835E26 /* PreviewData.swift in Sources */,
 				BE4FF6CE2B2BC6CB00DD2DEC /* PokedexApp.swift in Sources */,
 				BED73DEB2B40EA57003E2600 /* StatefulPreviewWrapper.swift in Sources */,
+				BEFA9FB12B65EECD005264E2 /* ScrubbyView.swift in Sources */,
 				BE95A0AC2B64900000511CBE /* PokedexViewControllerView.swift in Sources */,
 				BE021DDC2B62F06F0003E00A /* ContentView.swift in Sources */,
 				BE0ED96A2B3DAAA5009057F3 /* HeroImageView.swift in Sources */,
