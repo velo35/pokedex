@@ -14,7 +14,7 @@ struct PokedexApp: App
     {
         WindowGroup {
             ContentView()
-                .environment(PokedexViewModel())
+                .environment(PokedexViewModel.shared)
         }
     }
 }

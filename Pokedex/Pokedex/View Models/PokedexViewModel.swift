@@ -10,12 +10,14 @@ import Siesta
 
 @Observable class PokedexViewModel
 {
+    static let shared = PokedexViewModel()
+    
     private(set) var pokemonEntries = [PokemonEntry]()
     private(set) var pokemonCache = [PokemonEntry: Pokemon]()
     
     private var offset = 0
     
-    init()
+    private init()
     {
         PokemonService.shared.pokemonEntries(for: 0..<151).addObserver(self).loadIfNeeded()
     }

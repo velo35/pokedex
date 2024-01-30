@@ -129,7 +129,7 @@ struct PokemonDetailView: View
 #Preview {
     StatefulPreviewWrapper(PokemonEntry.bulbasaur) {
         PokemonDetailView(pokemon: .bulbasaur, selectedEntry: $0)
-            .environment(PokedexViewModel())
+            .environment(PokedexViewModel.shared)
     }
 //    PokemonDetailView(selectedEntry: .constant(.squirtle))
 //        .environment(viewModel())

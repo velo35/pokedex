@@ -9,7 +9,7 @@ import UIKit
 
 class PokedexViewController: UIViewController
 {
-    let viewModel = PokedexViewModel()
+    let viewModel = PokedexViewModel.shared
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
     
@@ -107,7 +107,7 @@ class PokedexSupplementaryView: UICollectionReusableView
         super.init(frame: frame)
         
         var configuration = UIButton.Configuration.borderedProminent()
-        configuration.title = "Load More"
+        configuration.title = "Load All"
         
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
             self.callback()

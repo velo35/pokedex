@@ -39,7 +39,6 @@ class PokemonService: Service
     func pokemonEntries(for range: Range<Int>) -> Resource { resource("/pokemon").withParams(["offset" : "\(range.lowerBound)", "limit": "\(range.upperBound - range.lowerBound)"]) }
     
     func pokemon(for entry: PokemonEntry) -> Resource { resource("/pokemon").child(entry.name) }
-//    func latestPokemon(for entry: PokemonEntry) -> Pokemon? { pokemon(for: entry).latestData?.typedContent() }
     func image(for pokemon: Pokemon) -> Resource { resource(absoluteURL: pokemon.imageUrl) }
 }
 

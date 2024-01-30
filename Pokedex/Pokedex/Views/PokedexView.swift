@@ -96,5 +96,5 @@ struct PokedexView: View
 
 #Preview {
     PokedexView()
-        .environment(PokedexViewModel())
+        .environment(PokedexViewModel.shared)
 }
