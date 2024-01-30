@@ -8,12 +8,9 @@
 import UIKit
 import Siesta
 
-class PokedexCell: UICollectionViewCell, ResourceObserver
+class PokedexCell: UICollectionViewCell
 {
-    func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent) 
-    {
-        self.image.image = resource.typedContent()
-    }
+    var imageResource: Resource?
     
     let background = {
         let background = UIView(frame: CGRect(x: 0, y: 0, width: 180, height: 100))
@@ -71,12 +68,23 @@ class PokedexCell: UICollectionViewCell, ResourceObserver
     
     func configure(with pokemon: Pokemon?)
     {
+        self.imageResource?.removeObservers(ownedBy: self)
+        
         if let pokemon {
             self.name.text = pokemon.name.capitalized
             self.background.backgroundColor = UIColor(pokemon.type.color)
             self.type.text = pokemon.type.rawValue
-            PokemonService.shared.image(for: pokemon).addObserver(self).loadIfNeeded()
+            self.imageResource = PokemonService.shared.image(for: pokemon).addObserver(self)
+            self.imageResource?.loadIfNeeded()
         }
+    }
+}
+
+extension PokedexCell: ResourceObserver
+{
+    func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent)
+    {
+        self.image.image = resource.typedContent()
     }
 }
 
