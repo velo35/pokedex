@@ -15,16 +15,22 @@ import Siesta
     private(set) var pokemonEntries = [PokemonEntry]()
     private(set) var pokemonCache = [PokemonEntry: Pokemon]()
     
-    private var offset = 0
+    var allFetched: Bool {
+        self.count == self.pokemonEntries.count
+    }
+    
+    private var count = 0
     
     private init()
     {
         PokemonService.shared.pokemonEntries(for: 0..<151).addObserver(self).loadIfNeeded()
     }
     
-    func fetchMore()
+    func fetchAll()
     {
-        PokemonService.shared.pokemonEntries(for: offset ..< offset + 100).addObserver(self).loadIfNeeded()
+        if self.count > 0 {
+            PokemonService.shared.pokemonEntries(for: 0 ..< self.count).addObserver(self).loadIfNeeded()
+        }
     }
     
     #if DEBUG
@@ -45,18 +51,15 @@ extension PokedexViewModel: ResourceObserver
 {
     func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent) 
     {
-        addEntries(resource.typedContent())
-    }
-    
-    private func addEntries(_ entries: [PokemonEntry]?) {
-        guard let entries else { return }
-        print("Received: \(entries.count)")
-        self.pokemonEntries += entries
-        self.offset += entries.count
+        guard let request: PokemonService.PokemonRequest = resource.typedContent() else { return }
+        self.pokemonEntries = request.results
+        self.count = request.count
         
-        for entry in entries {
+        for entry in self.pokemonEntries {
             PokemonService.shared.pokemon(for: entry).addObserver(owner: self, closure: { resource, event in
-                self.pokemonCache[entry] = resource.typedContent()
+                if let pokemon: Pokemon = resource.typedContent() {
+                    self.pokemonCache[entry] = pokemon
+                }
             }).loadIfNeeded()
         }
     }

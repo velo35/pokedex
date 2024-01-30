@@ -38,9 +38,6 @@ class PokedexViewController: UIViewController
         
         let supplementaryRegistration = UICollectionView.SupplementaryRegistration<PokedexSupplementaryView>(elementKind: UICollectionView.elementKindSectionFooter) {
             supplementaryView, kind, indexPath in
-            supplementaryView.callback = {
-                print("hey!")
-            }
         }
         
         self.dataSource.supplementaryViewProvider = {
@@ -59,7 +56,7 @@ class PokedexViewController: UIViewController
     
     private func observeEntries()
     {
-        withObservationTracking {
+        let _ = withObservationTracking {
             self.viewModel.pokemonEntries
         } onChange: {
             DispatchQueue.main.async {
@@ -71,12 +68,24 @@ class PokedexViewController: UIViewController
     
     private func observePokemon()
     {
-        withObservationTracking {
+        let _ = withObservationTracking {
             self.viewModel.pokemonCache
         } onChange: {
             DispatchQueue.main.async {
                 self.updateCells()
                 self.observePokemon()
+            }
+        }
+    }
+    
+    private func observeAllFetched()
+    {
+        let _ = withObservationTracking {
+            self.viewModel.allFetched
+        } onChange: {
+            DispatchQueue.main.async {
+                self.updateLoadAll()
+                self.observeAllFetched()
             }
         }
     }
@@ -96,12 +105,15 @@ class PokedexViewController: UIViewController
         snapshot.reconfigureItems(visibleEntries)
         self.dataSource.apply(snapshot)
     }
+    
+    private func updateLoadAll()
+    {
+        // TODO
+    }
 }
 
 class PokedexSupplementaryView: UICollectionReusableView
 {
-    var callback: () -> Void = {}
-    
     override init(frame: CGRect)
     {
         super.init(frame: frame)
@@ -109,8 +121,8 @@ class PokedexSupplementaryView: UICollectionReusableView
         var configuration = UIButton.Configuration.borderedProminent()
         configuration.title = "Load All"
         
-        let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
-            self.callback()
+        let button = UIButton(configuration: configuration, primaryAction: UIAction { _ in
+            PokedexViewModel.shared.fetchAll()
         })
         
         self.addSubview(button)

@@ -62,10 +62,11 @@ struct PokedexView: View
                             }
                         }
                     }
+                    
                     Button {
-                        viewModel.fetchMore()
+                        viewModel.fetchAll()
                     } label: {
-                        Text("Load More")
+                        Text("Load All")
                             .foregroundStyle(.white)
                             .padding(.horizontal)
                             .padding(.vertical, 6)
@@ -84,13 +85,6 @@ struct PokedexView: View
                 .padding([.bottom, .trailing])
                 .padding([.bottom])
         }
-//            #if DEBUG
-//            .toolbar {
-//                Button("Type filter") {
-//                    viewModel.filter()
-//                }
-//            }
-//            #endif
     }
 }
 
