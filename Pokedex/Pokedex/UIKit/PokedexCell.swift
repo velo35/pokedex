@@ -69,12 +69,14 @@ class PokedexCell: UICollectionViewCell, ResourceObserver
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with pokemon: Pokemon)
+    func configure(with pokemon: Pokemon?)
     {
-        self.name.text = pokemon.name.capitalized
-        self.background.backgroundColor = UIColor(pokemon.type.color)
-        self.type.text = pokemon.type.rawValue
-        PokemonService.shared.image(for: pokemon).addObserver(self).loadIfNeeded()
+        if let pokemon {
+            self.name.text = pokemon.name.capitalized
+            self.background.backgroundColor = UIColor(pokemon.type.color)
+            self.type.text = pokemon.type.rawValue
+            PokemonService.shared.image(for: pokemon).addObserver(self).loadIfNeeded()
+        }
     }
 }
 

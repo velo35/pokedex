@@ -9,10 +9,9 @@ import UIKit
 
 class PokedexViewController: UIViewController
 {
+    let viewModel = PokedexViewModel()
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
-    var pokemonCache = [PokemonEntry: Pokemon]()
-    var entryIndexPath = [PokemonEntry: IndexPath]()
     
     override func loadView() 
     {
@@ -29,10 +28,7 @@ class PokedexViewController: UIViewController
         let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() {
             [unowned self]
             cell, indexPath, entry in
-            entryIndexPath[entry] = indexPath
-            if let pokemon = self.pokemonCache[entry] {
-                cell.configure(with: pokemon)
-            }
+            cell.configure(with: self.viewModel.pokemonCache[entry])
         }
         
         self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: collectionView) {
@@ -57,37 +53,48 @@ class PokedexViewController: UIViewController
     
     override func viewWillAppear(_ animated: Bool) 
     {
-        print("viewWillAppear")
-        PokemonService.shared.pokemonEntries(for: 0..<151).addObserver(owner: self, closure: {
-            [unowned self]
-            resource, event in
-            self.addEntries(resource.typedContent())
-        }).loadIfNeeded()
+        self.observeEntries()
+        self.observePokemon()
     }
     
-    func addEntries(_ entries: [PokemonEntry]?)
+    private func observeEntries()
     {
-        print("addEntries")
-        guard let entries else { return }
+        withObservationTracking {
+            self.viewModel.pokemonEntries
+        } onChange: {
+            DispatchQueue.main.async {
+                self.updateEntries()
+                self.observeEntries()
+            }
+        }
+    }
+    
+    private func observePokemon()
+    {
+        withObservationTracking {
+            self.viewModel.pokemonCache
+        } onChange: {
+            DispatchQueue.main.async {
+                self.updateCells()
+                self.observePokemon()
+            }
+        }
+    }
+    
+    private func updateEntries()
+    {
         var snapshot = NSDiffableDataSourceSnapshot<Int, PokemonEntry>()
         snapshot.appendSections([0])
-        snapshot.appendItems(entries)
+        snapshot.appendItems(self.viewModel.pokemonEntries)
         self.dataSource.apply(snapshot)
-        
-        print("entries added!")
-        
-        for entry in entries {
-            PokemonService.shared.pokemon(for: entry).addObserver(owner: self, closure: {
-                [unowned self]
-                resource, event in
-                self.pokemonCache[entry] = resource.typedContent()
-                if let indexPath = self.entryIndexPath[entry],
-                    let pokemon = self.pokemonCache[entry],
-                    let cell = self.collectionView.cellForItem(at: indexPath) as? PokedexCell {
-                    cell.configure(with: pokemon)
-                }
-            }).loadIfNeeded()
-        }
+    }
+    
+    private func updateCells()
+    {
+        let visibleEntries = self.collectionView.visibleCells.compactMap({ self.collectionView.indexPath(for: $0) }).compactMap{ self.viewModel.pokemonEntries[$0.item] }
+        var snapshot = self.dataSource.snapshot()
+        snapshot.reconfigureItems(visibleEntries)
+        self.dataSource.apply(snapshot)
     }
 }
 
