@@ -52,6 +52,8 @@ class PokedexViewController: UIViewController
     {
         self.observeEntries()
         self.observePokemon()
+        self.updateEntries()
+        self.updateCells()
     }
     
     private func observeEntries()
