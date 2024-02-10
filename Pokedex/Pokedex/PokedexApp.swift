@@ -15,6 +15,7 @@ struct PokedexApp: App
         WindowGroup {
             ContentView()
                 .environment(PokedexViewModel.shared)
+                .preferredColorScheme(.light)
         }
     }
 }

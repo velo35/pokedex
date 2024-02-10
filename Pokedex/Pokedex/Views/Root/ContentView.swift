@@ -23,13 +23,15 @@ struct ContentView: View
     {
         SideMenuView(
             main: NavigationStack {
-                if uiMode == "SwiftUI" {
-                    PokedexView()
-                        .navigationTitle("Pokemon")
+                Group {
+                    if uiMode == "SwiftUI" {
+                        PokedexView()
+                    }
+                    else {
+                        PokedexViewControllerView()
+                    }
                 }
-                else {
-                    PokedexViewControllerView()
-                }
+                .navigationTitle("Pokemon")
             },
             side: OptionsPanel(
                 mode: Binding {

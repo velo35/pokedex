@@ -39,9 +39,8 @@ struct SideMenuView<Main: View, Side: View>: View
                         }
                 }
                 .padding(.leading, 6)
-                .safeAreaPadding(.top, 50)
+                .safeAreaPadding(.top, 20)
             }
-//            .gesture(TapGesture(count: 1).onEnded{ print("hey") }, including: .none)
             .offset(x: reveal ? amount : 0)
             .animation(.default, value: reveal)
             .gesture(LongPressGesture(minimumDuration: 0.1).onEnded{ _ in reveal = false }, including: reveal ? .gesture : .subviews)
