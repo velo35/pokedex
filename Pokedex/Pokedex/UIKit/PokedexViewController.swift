@@ -14,16 +14,22 @@ class PokedexViewController: UIViewController
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
     
     override func loadView() 
-    {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: 180, height: 100)
-        flowLayout.minimumInteritemSpacing = 0
-        flowLayout.minimumLineSpacing = 16
-        flowLayout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        flowLayout.footerReferenceSize = CGSize(width: 0, height: 44)
+    {        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(180),
+                                              heightDimension: .absolute(100))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        self.collectionView = collectionView
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .absolute(100))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
+        group.interItemSpacing = .fixed(16)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 16
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        
+        self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
         let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() {
             [unowned self]
@@ -31,7 +37,7 @@ class PokedexViewController: UIViewController
             cell.configure(with: self.viewModel.pokemonCache[entry])
         }
         
-        self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: collectionView) {
+        self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: self.collectionView) {
             collectionView, indexPath, entry in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: entry)
         }
@@ -45,7 +51,7 @@ class PokedexViewController: UIViewController
             collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryRegistration, for: indexPath)
         }
         
-        self.view = ScrubbyView(collectionView)
+        self.view = ScrubbyView(self.collectionView)
     }
     
     override func viewWillAppear(_ animated: Bool) 

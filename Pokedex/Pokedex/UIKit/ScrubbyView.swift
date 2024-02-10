@@ -58,8 +58,11 @@ class ScrubbyView: UIView
     
     @objc override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) 
     {
-        let unitY = self.scrollView.contentOffset.y / (self.scrollView.contentSize.height - self.scrollView.bounds.height)
-        self.scrubbyCenterY.constant = (self.bounds.height - 0.0) * unitY
+        let scrollableHeight = self.scrollView.contentSize.height - self.scrollView.bounds.height
+        if scrollableHeight > 0 {
+            let unitY = self.scrollView.contentOffset.y / scrollableHeight
+            self.scrubbyCenterY.constant = (self.bounds.height - 0.0) * unitY
+        }
     }
     
     @objc func panGesture(_ panGesture: UILongPressGestureRecognizer)
