@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OptionsPanel: View 
+struct OptionsView: View 
 {
     @Binding var mode: UIMode
     
@@ -51,5 +51,5 @@ struct OptionsPanel: View
 }
 
 #Preview {
-    OptionsPanel(mode: .constant(UIMode.swiftUI))
+    OptionsView(mode: .constant(UIMode.swiftUI))
 }

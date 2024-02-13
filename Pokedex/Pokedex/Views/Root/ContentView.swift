@@ -33,7 +33,7 @@ struct ContentView: View
                 }
                 .navigationTitle("Pokemon")
             },
-            side: OptionsPanel(
+            side: OptionsView(
                 mode: Binding {
                     UIMode(rawValue: uiMode)!
                 } set: {
