@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PokedexView: View 
 {
-    @Environment(PokedexViewModel.self) var viewModel
+    let viewModel = PokedexViewModel.shared
     
     @Namespace var animation
     
@@ -90,5 +90,4 @@ struct PokedexView: View
 
 #Preview {
     PokedexView()
-        .environment(PokedexViewModel.shared)
 }

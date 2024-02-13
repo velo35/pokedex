@@ -35,10 +35,9 @@ struct ContentView: View
             },
             side: OptionsPanel(
                 mode: Binding {
-                    UIMode(rawValue: uiMode)
+                    UIMode(rawValue: uiMode)!
                 } set: {
-                    guard let mode = $0?.rawValue else { return }
-                    uiMode = mode
+                    uiMode = $0.rawValue
                 })
         )
     }
@@ -46,5 +45,4 @@ struct ContentView: View
 
 #Preview {
     ContentView()
-        .environment(PokedexViewModel.shared)
 }

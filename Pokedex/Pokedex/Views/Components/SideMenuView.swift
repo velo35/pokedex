@@ -10,7 +10,7 @@ import SwiftUI
 struct SideMenuView<Main: View, Side: View>: View
 {
     @State private var reveal = false
-    let amount = 140.0
+    private let amount = 180.0
     
     let main: Main
     let side: Side

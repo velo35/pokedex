@@ -21,7 +21,7 @@ fileprivate extension CoordinateSpace
 
 struct PokemonDetailView: View 
 {
-    @Environment(PokedexViewModel.self) var viewModel
+    let viewModel = PokedexViewModel.shared
     
 //    @State var flavorText = ""
     @State var pokemon: Pokemon
@@ -129,7 +129,6 @@ struct PokemonDetailView: View
 #Preview {
     StatefulPreviewWrapper(PokemonEntry.bulbasaur) {
         PokemonDetailView(pokemon: .bulbasaur, selectedEntry: $0)
-            .environment(PokedexViewModel.shared)
     }
 //    PokemonDetailView(selectedEntry: .constant(.squirtle))
 //        .environment(viewModel())

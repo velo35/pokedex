@@ -9,13 +9,15 @@ import SwiftUI
 
 struct OptionsPanel: View 
 {
-    @Binding var mode: UIMode?
+    @Binding var mode: UIMode
     
     var body: some View
     {
-        List(selection: $mode) {
-            ForEach(UIMode.allCases) {
-                Text($0.rawValue)
+        VStack(spacing: 16) {
+            ForEach(UIMode.allCases) { uiMode in
+                Button(uiMode.rawValue) {
+                    mode = uiMode
+                }
             }
         }
     }
