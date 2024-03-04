@@ -29,7 +29,7 @@ struct TypeFilterView: View
                             type.image
                                 .renderingMode(.original)
                                 .font(.system(size: 34))
-                                .foregroundStyle(type.color)
+                                .foregroundStyle(Color(type.color.uiColor))
                                 .shadow(color: .black.opacity(1), radius: 4)
                         }
                     }

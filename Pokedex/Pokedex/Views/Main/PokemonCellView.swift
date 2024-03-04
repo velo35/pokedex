@@ -52,9 +52,9 @@ struct PokemonCellView: View
                 }
             }
         }
-        .background(pokemon.type.color)
+        .background(Color(pokemon.type.color.uiColor))
         .clipShape(.rect(cornerRadius: 12))
-        .shadow(color: pokemon.type.color, radius: 6)
+        .shadow(color: Color(pokemon.type.color.uiColor), radius: 6)
     }
 }
 

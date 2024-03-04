@@ -72,7 +72,7 @@ class PokedexCell: UICollectionViewCell
         
         if let pokemon {
             self.name.text = pokemon.name.capitalized
-            self.background.backgroundColor = UIColor(pokemon.type.color)
+            self.background.backgroundColor = pokemon.type.color.uiColor
             self.type.text = pokemon.type.rawValue
             self.imageResource = PokemonService.shared.image(for: pokemon).addObserver(self)
             self.imageResource?.loadIfNeeded()

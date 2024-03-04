@@ -17,5 +17,5 @@ struct PokemonEntry: Identifiable, Hashable, Codable
         self.url = url
     }
     
-    var id: URL { url }
+    var id: Self { self }
 }
