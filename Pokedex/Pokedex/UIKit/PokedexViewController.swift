@@ -51,6 +51,7 @@ class PokedexViewController: UIViewController
             collectionView.dequeueConfiguredReusableSupplementary(using: supplementaryRegistration, for: indexPath)
         }
         
+        self.collectionView.showsVerticalScrollIndicator = false
         self.view = ScrubbyView(self.collectionView)
     }
     

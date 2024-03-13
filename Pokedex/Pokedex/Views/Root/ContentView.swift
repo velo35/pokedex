@@ -31,6 +31,7 @@ struct ContentView: View
                         PokedexViewControllerView()
                     }
                 }
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle("Pokemon")
             },
             side: OptionsView(

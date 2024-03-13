@@ -6,19 +6,32 @@
 //
 
 import UIKit
+import SwiftUI
 
 class ScrubbyView: UIView
 {
     var offset = 0.0
     let scrubby: UIView
     let scrollView: UIScrollView
+    var scrubbyCenterX: NSLayoutConstraint!
     var scrubbyCenterY: NSLayoutConstraint!
     var startGestureY = 0.0
-    var startCenterY = 0.0
+    var startCenterY = 0.0 // needed to calculate srubby Y position because drag may begin from any point in scrubby
+    var longPressGestureRecognizer: UILongPressGestureRecognizer!
+    var tapGestureRecognizer: UITapGestureRecognizer!
+    var timer: Timer?
+    
+    var scrubbyActive = false {
+        didSet {
+            self.animateScrubby()
+        }
+    }
+    
+    let inset = 60.0
     
     init(_ scrollView: UIScrollView)
     {
-        self.scrubby = UIView()
+        self.scrubby = UIHostingController(rootView: ScrubbyKnobView()).view
         self.scrollView = scrollView
         
         super.init(frame: .zero)
@@ -34,47 +47,91 @@ class ScrubbyView: UIView
         
         scrollView.addObserver(self, forKeyPath: "contentOffset", options: .new, context: nil)
         
-        scrubby.backgroundColor = .red
-        scrubby.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(scrubby)
-        NSLayoutConstraint.activate([
-            scrubby.rightAnchor.constraint(equalTo: self.rightAnchor),
-            scrubby.widthAnchor.constraint(equalToConstant: 60),
-            scrubby.heightAnchor.constraint(equalToConstant: 60),
-        ])
+        scrubby.backgroundColor = .clear
+        self.scrubby.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.scrubby)
+
+        self.scrubbyCenterX = self.scrubby.centerXAnchor.constraint(equalTo: self.trailingAnchor, constant: 0)
+        self.scrubbyCenterX.isActive = true
         
-        self.scrubbyCenterY = scrubby.centerYAnchor.constraint(equalTo: self.topAnchor, constant: 0)
+        self.scrubbyCenterY = self.scrubby.centerYAnchor.constraint(equalTo: self.topAnchor, constant: self.inset)
         self.scrubbyCenterY.isActive = true
         
-        let panGesture = UILongPressGestureRecognizer(target: self, action: #selector(panGesture))
-        panGesture.minimumPressDuration = 0.0
-        panGesture.delegate = self
-        scrubby.addGestureRecognizer(panGesture)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressGesture))
+        longPressGesture.minimumPressDuration = 0.0
+        longPressGesture.delegate = self
+        self.scrubby.addGestureRecognizer(longPressGesture)
+        self.longPressGestureRecognizer = longPressGesture
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture))
+        self.scrubby.addGestureRecognizer(tapGesture)
+        self.tapGestureRecognizer = tapGesture
+        
+        self.updateScrubby()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) 
+    func updateScrubby()
     {
-        let scrollableHeight = self.scrollView.contentSize.height - self.scrollView.bounds.height
-        if scrollableHeight > 0 {
-            let unitY = self.scrollView.contentOffset.y / scrollableHeight
-            self.scrubbyCenterY.constant = (self.bounds.height - 0.0) * unitY
+        self.longPressGestureRecognizer.isEnabled = self.scrubbyActive
+        self.scrubbyCenterX.constant = self.scrubbyActive ? -5 : 15
+    }
+    
+    func animateScrubby()
+    {
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 12) {
+            self.updateScrubby()
+            self.layoutIfNeeded()
         }
     }
     
-    @objc func panGesture(_ panGesture: UILongPressGestureRecognizer)
+    func startDeactivateTimer()
     {
-        let dy = panGesture.location(in: self).y - self.startGestureY
-        let scrubbyY = max(0.0, min(self.bounds.height, self.startCenterY + dy))
-        self.scrubbyCenterY.constant = scrubbyY
+        self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+            self.scrubbyActive = false
+        }
+    }
+    
+    @objc override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) 
+    {
+        let scrollRange = self.scrollView.contentSize.height - self.scrollView.bounds.height
+        if scrollRange > 0 {
+            let scrollY = self.scrollView.contentOffset.y
+            let scrubbyRange = self.bounds.height - 2 * self.inset
+            self.scrubbyCenterY.constant = self.inset + scrubbyRange / scrollRange * scrollY
+        }
+    }
+    
+    @objc func longPressGesture(_ longPressGesture: UILongPressGestureRecognizer)
+    {
+        let dy = longPressGesture.location(in: self).y - self.startGestureY
+        let scrubbyCenterY = max(self.inset, min(self.bounds.height - self.inset, self.startCenterY + dy))
+        self.scrubbyCenterY.constant = scrubbyCenterY
         
-        let unitY = scrubbyY / self.bounds.height
-        let y = (self.scrollView.contentSize.height - self.scrollView.bounds.height) * unitY
+        let scrollRange = self.scrollView.contentSize.height - self.scrollView.bounds.height
+        let scrubbyRange = self.bounds.height - 2 * self.inset
+        let scrollY = (scrubbyCenterY - self.inset) * scrollRange / scrubbyRange
+        self.scrollView.contentOffset = CGPoint(x: 0, y: scrollY)
         
-        self.scrollView.contentOffset = CGPoint(x: 0, y: y)
+        self.timer?.invalidate()
+        if longPressGesture.state == .ended || longPressGesture.state == .cancelled {
+            self.startDeactivateTimer()
+        }
+    }
+    
+    @objc func tapGesture()
+    {
+        if self.scrubbyActive {
+            self.timer?.invalidate()
+        }
+        else {
+            self.startDeactivateTimer()
+        }
+        
+        self.scrubbyActive = !self.scrubbyActive
     }
 }
 
@@ -85,5 +142,13 @@ extension ScrubbyView: UIGestureRecognizerDelegate
         self.startGestureY = gestureRecognizer.location(in: self).y
         self.startCenterY = self.scrubbyCenterY.constant
         return true
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool
+    {
+        if gestureRecognizer == self.longPressGestureRecognizer && otherGestureRecognizer == self.tapGestureRecognizer {
+            return true
+        }
+        return false
     }
 }
