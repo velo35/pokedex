@@ -12,8 +12,8 @@ struct SideMenuView<MainContent: View, SideContent: View>: View
     @State private var reveal = false
     private let amount = 180.0
     
-    let main: () -> MainContent
-    let side: () -> SideContent
+    @ViewBuilder let main: () -> MainContent
+    @ViewBuilder let side: () -> SideContent
     
     var body: some View
     {
@@ -22,14 +22,23 @@ struct SideMenuView<MainContent: View, SideContent: View>: View
                 .frame(width: amount)
                 .safeAreaPadding(.top, 150)
             
-            ZStack(alignment: .topLeading) {
-                main()
-                
+            main()
+                .offset(x: reveal ? amount : 0)
+                .animation(.default, value: reveal)
+                .gesture(
+                    LongPressGesture(minimumDuration: 0.1).onEnded { _ in
+                        reveal = false
+                    },
+                    including: reveal ? .gesture : .subviews
+                )
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
                 Button {
                     reveal.toggle()
                 } label: {
                     Image(systemName: "line.3.horizontal")
-                        .font(.title)
+                        .font(.subheadline)
                         .foregroundStyle(.black)
                         .padding(12)
                         .background {
@@ -38,14 +47,8 @@ struct SideMenuView<MainContent: View, SideContent: View>: View
                                 .stroke(.gray.opacity(0.8), lineWidth: 2)
                         }
                 }
-                .padding(.leading, 6)
-                .safeAreaPadding(.top, 20)
             }
-            .offset(x: reveal ? amount : 0)
-            .animation(.default, value: reveal)
-            .gesture(LongPressGesture(minimumDuration: 0.1).onEnded{ _ in reveal = false }, including: reveal ? .gesture : .subviews)
         }
-        .ignoresSafeArea()
     }
 }
 

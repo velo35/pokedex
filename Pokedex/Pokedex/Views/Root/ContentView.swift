@@ -21,26 +21,24 @@ struct ContentView: View
     
     var body: some View
     {
-        SideMenuView {
-            NavigationStack {
-                Group {
-                    if uiMode == "SwiftUI" {
-                        PokedexView()
-                    }
-                    else {
-                        PokedexViewControllerView()
-                    }
+        NavigationStack {
+            SideMenuView {
+                if uiMode == "SwiftUI" {
+                    PokedexView()
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle("Pokemon")
+                else {
+                    PokedexViewControllerView()
+                }
+            } side: {
+                OptionsView(
+                mode: Binding {
+                    UIMode(rawValue: uiMode)!
+                } set: {
+                    uiMode = $0.rawValue
+                })
             }
-        } side: {
-            OptionsView(
-            mode: Binding {
-                UIMode(rawValue: uiMode)!
-            } set: {
-                uiMode = $0.rawValue
-            })
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Pokemon")
         }
     }
 }
