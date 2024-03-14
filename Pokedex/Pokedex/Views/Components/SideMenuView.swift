@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-struct SideMenuView<Main: View, Side: View>: View
+struct SideMenuView<MainContent: View, SideContent: View>: View
 {
     @State private var reveal = false
     private let amount = 180.0
     
-    let main: Main
-    let side: Side
+    let main: () -> MainContent
+    let side: () -> SideContent
     
     var body: some View
     {
         ZStack(alignment: .leading) {
-            side
+            side()
                 .frame(width: amount)
                 .safeAreaPadding(.top, 150)
             
             ZStack(alignment: .topLeading) {
-                main
+                main()
                 
                 Button {
                     reveal.toggle()
@@ -50,5 +50,9 @@ struct SideMenuView<Main: View, Side: View>: View
 }
 
 #Preview {
-    SideMenuView(main: Color.red, side: Color.blue)
+    SideMenuView {
+        Color.red
+    } side: {
+        Color.blue
+    }
 }

@@ -21,8 +21,8 @@ struct ContentView: View
     
     var body: some View
     {
-        SideMenuView(
-            main: NavigationStack {
+        SideMenuView {
+            NavigationStack {
                 Group {
                     if uiMode == "SwiftUI" {
                         PokedexView()
@@ -33,14 +33,15 @@ struct ContentView: View
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle("Pokemon")
-            },
-            side: OptionsView(
-                mode: Binding {
-                    UIMode(rawValue: uiMode)!
-                } set: {
-                    uiMode = $0.rawValue
-                })
-        )
+            }
+        } side: {
+            OptionsView(
+            mode: Binding {
+                UIMode(rawValue: uiMode)!
+            } set: {
+                uiMode = $0.rawValue
+            })
+        }
     }
 }
 
