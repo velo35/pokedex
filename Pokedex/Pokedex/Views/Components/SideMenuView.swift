@@ -17,10 +17,9 @@ struct SideMenuView<MainContent: View, SideContent: View>: View
     
     var body: some View
     {
-        ZStack(alignment: .leading) {
+        ZStack(alignment: .topLeading) {
             side()
                 .frame(width: amount)
-                .safeAreaPadding(.top, 150)
             
             main()
                 .offset(x: reveal ? amount : 0)
