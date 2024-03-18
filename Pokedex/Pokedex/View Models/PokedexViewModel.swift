@@ -23,7 +23,7 @@ import Siesta
     
     private init()
     {
-        PokemonService.shared.pokemonEntries(for: 0..<151).addObserver(self).loadIfNeeded()
+        PokemonService.shared.pokemonEntries(for: 0 ..< 151).addObserver(self).loadIfNeeded()
     }
     
     func fetchAll()

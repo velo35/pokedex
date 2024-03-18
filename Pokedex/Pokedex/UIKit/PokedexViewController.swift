@@ -34,7 +34,9 @@ class PokedexViewController: UIViewController
         let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() {
             [unowned self]
             cell, indexPath, entry in
-            cell.configure(with: self.viewModel.pokemonCache[entry])
+            if let pokemon = self.viewModel.pokemonCache[entry] {
+                cell.configure(with: pokemon)
+            }
         }
         
         self.dataSource = UICollectionViewDiffableDataSource<Int, PokemonEntry>(collectionView: self.collectionView) {

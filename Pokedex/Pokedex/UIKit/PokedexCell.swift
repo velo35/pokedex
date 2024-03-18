@@ -44,6 +44,8 @@ class PokedexCell: UICollectionViewCell
     
     let image = UIImageView(frame: CGRect(x: 108, y: 32, width: 64, height: 64))
     
+    let imageSpinner = UIActivityIndicatorView(style: .large)
+    
     override init(frame: CGRect)
     {
         super.init(frame: frame)
@@ -52,6 +54,8 @@ class PokedexCell: UICollectionViewCell
         self.contentView.addSubview(self.typeBackground)
         self.contentView.addSubview(self.type)
         self.contentView.addSubview(self.image)
+        self.contentView.addSubview(self.imageSpinner)
+        self.imageSpinner.frame = CGRect(x: 108, y: 32, width: 64, height: 64)
     }
     
     override func prepareForReuse() 
@@ -66,17 +70,16 @@ class PokedexCell: UICollectionViewCell
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with pokemon: Pokemon?)
+    func configure(with pokemon: Pokemon)
     {
         self.imageResource?.removeObservers(ownedBy: self)
         
-        if let pokemon {
-            self.name.text = pokemon.name.capitalized
-            self.background.backgroundColor = pokemon.type.color.uiColor
-            self.type.text = pokemon.type.rawValue
-            self.imageResource = PokemonService.shared.image(for: pokemon).addObserver(self)
-            self.imageResource?.loadIfNeeded()
-        }
+        self.name.text = pokemon.name.capitalized
+        self.background.backgroundColor = pokemon.type.color.uiColor
+        self.type.text = pokemon.type.rawValue
+        self.imageResource = PokemonService.shared.image(for: pokemon).addObserver(self)
+        self.imageResource?.loadIfNeeded()
+        self.imageSpinner.startAnimating()
     }
 }
 
@@ -84,7 +87,10 @@ extension PokedexCell: ResourceObserver
 {
     func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent)
     {
-        self.image.image = resource.typedContent()
+        if let image: UIImage = resource.typedContent() {
+            self.image.image = image
+            self.imageSpinner.stopAnimating()
+        }
     }
 }
 
