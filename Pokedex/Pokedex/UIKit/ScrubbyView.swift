@@ -19,10 +19,13 @@ class ScrubbyView: UIView
     var startCenterY = 0.0 // needed to calculate srubby Y position because drag may begin from any point in scrubby
     var longPressGestureRecognizer: UILongPressGestureRecognizer!
     var tapGestureRecognizer: UITapGestureRecognizer!
-    var timer: Timer?
+    var deactivateTimer: Timer?
     
     var scrubbyActive = false {
         didSet {
+            if !self.scrubbyActive {
+                self.deactivateTimer?.invalidate()
+            }
             self.animateScrubby()
         }
     }
@@ -82,15 +85,23 @@ class ScrubbyView: UIView
     
     func animateScrubby()
     {
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 12) {
+        UIView.animate(withDuration: 1, 
+                       delay: 0,
+                       usingSpringWithDamping: 1,
+                       initialSpringVelocity: 12,
+                       options: .allowUserInteraction) {
             self.updateScrubby()
             self.layoutIfNeeded()
+        } completion: { _ in
+            if self.scrubbyActive {
+                self.startDeactivateTimer()
+            }
         }
     }
     
     func startDeactivateTimer()
     {
-        self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+        self.deactivateTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
             self.scrubbyActive = false
         }
     }
@@ -116,7 +127,7 @@ class ScrubbyView: UIView
         let scrollY = (scrubbyCenterY - self.inset) * scrollRange / scrubbyRange
         self.scrollView.contentOffset = CGPoint(x: 0, y: scrollY)
         
-        self.timer?.invalidate()
+        self.deactivateTimer?.invalidate()
         if longPressGesture.state == .ended || longPressGesture.state == .cancelled {
             self.startDeactivateTimer()
         }
@@ -124,13 +135,6 @@ class ScrubbyView: UIView
     
     @objc func tapGesture()
     {
-        if self.scrubbyActive {
-            self.timer?.invalidate()
-        }
-        else {
-            self.startDeactivateTimer()
-        }
-        
         self.scrubbyActive = !self.scrubbyActive
     }
 }
