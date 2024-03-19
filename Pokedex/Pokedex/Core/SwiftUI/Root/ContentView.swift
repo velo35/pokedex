@@ -19,7 +19,7 @@ struct ContentView: View
             SideMenuView {
                 Group {
                     if uiMode == .swiftUI {
-                        PokedexView()
+                        SwiftPokedexView()
                     }
                     else {
                         PokedexViewControllerView()

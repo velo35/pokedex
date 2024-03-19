@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PokedexView: View 
+struct SwiftPokedexView: View 
 {
     let viewModel = PokedexViewModel.shared
     
@@ -92,5 +92,5 @@ struct PokedexView: View
 }
 
 #Preview {
-    PokedexView()
+    SwiftPokedexView()
 }
