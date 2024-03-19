@@ -24,14 +24,12 @@ struct OptionsView: View
                     .alignmentGuide(.selectionAlignmentGuide) { d in
                         d[VerticalAlignment.center]
                     }
-                
+                    .animation(.easeInOut(duration: 0.25), value: uiMode)
                 
                 VStack(spacing: 16) {
                     ForEach(UIMode.allCases) { uiMode in
                         Button {
-                            withAnimation(.easeInOut(duration: 0.25)) {
-                                self.uiMode = uiMode
-                            }
+                            self.uiMode = uiMode
                         } label: {
                             Text(uiMode.rawValue)
                                 .font(.title.weight(.semibold))
