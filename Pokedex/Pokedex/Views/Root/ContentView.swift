@@ -7,38 +7,28 @@
 
 import SwiftUI
 
-enum UIMode: String, CaseIterable, Identifiable
-{
-    case swiftUI = "SwiftUI"
-    case uiKit = "UIKit"
-    
-    var id: Self { self }
-}
-
 struct ContentView: View 
 {
-    @AppStorage("ui_mode") private var uiMode = UIMode.swiftUI.rawValue
+    @State private var uiMode = UIMode.swiftUI
     
     var body: some View
     {
         NavigationStack {
             SideMenuView {
-                if uiMode == "SwiftUI" {
+                if uiMode == .swiftUI {
                     PokedexView()
                 }
                 else {
                     PokedexViewControllerView()
                 }
             } side: {
-                OptionsView(
-                mode: Binding {
-                    UIMode(rawValue: uiMode)!
-                } set: {
-                    uiMode = $0.rawValue
-                })
+                OptionsView()
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Pokemon")
+            .onPreferenceChange(UIMOdePreferenceKey.self) { value in
+                uiMode = value
+            }
         }
     }
 }

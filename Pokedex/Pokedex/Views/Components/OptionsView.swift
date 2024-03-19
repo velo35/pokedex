@@ -9,16 +9,13 @@ import SwiftUI
 
 struct OptionsView: View 
 {
-    @Binding var mode: UIMode
+    @AppStorage("ui_mode") private var uiMode = UIMode.swiftUI
     
     var body: some View
     {
-        VStack {
+        VStack(spacing: 0) {
             Text("UI Mode")
                 .font(.largeTitle)
-            
-            Spacer()
-                .frame(height: 20)
             
             ZStack(alignment: Alignment(horizontal: .center, vertical: .selectionAlignmentGuide)) {
                 RoundedRectangle(cornerRadius: 10)
@@ -33,23 +30,25 @@ struct OptionsView: View
                     ForEach(UIMode.allCases) { uiMode in
                         Button {
                             withAnimation(.easeInOut(duration: 0.25)) {
-                                mode = uiMode
+                                self.uiMode = uiMode
                             }
                         } label: {
                             Text(uiMode.rawValue)
                                 .font(.title.weight(.semibold))
                                 .foregroundStyle(.black)
                         }
-                        .alignmentGuide(mode == uiMode ? .selectionAlignmentGuide : VerticalAlignment.center) { d in
+                        .alignmentGuide(self.uiMode == uiMode ? .selectionAlignmentGuide : VerticalAlignment.center) { d in
                             d[VerticalAlignment.center]
                         }
                     }
                 }
+                .padding(.vertical)
             }
         }
+        .preference(key: UIMOdePreferenceKey.self, value: uiMode)
     }
 }
 
 #Preview {
-    OptionsView(mode: .constant(UIMode.swiftUI))
+    OptionsView()
 }

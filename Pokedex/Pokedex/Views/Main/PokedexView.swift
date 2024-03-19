@@ -29,6 +29,18 @@ struct PokedexView: View
         }
     }
     
+    var progressView: some View
+    {
+        ProgressView()
+            .scaleEffect(3)
+            .frame(width: 180, height: 100)
+            .background {
+                Color.gray
+            }
+            .clipShape(.rect(cornerRadius: 12))
+            .shadow(color: .gray, radius: 6)
+    }
+    
     var body: some View
     {
         ZStack(alignment: .bottomTrailing) {
@@ -51,14 +63,7 @@ struct PokedexView: View
                                     }
                             }
                             else {
-                                ProgressView()
-                                    .scaleEffect(3)
-                                    .frame(width: 180, height: 100)
-                                    .background {
-                                        Color.gray
-                                    }
-                                    .clipShape(.rect(cornerRadius: 12))
-                                    .shadow(color: .gray, radius: 6)
+                                progressView
                             }
                         }
                     }
@@ -83,7 +88,7 @@ struct PokedexView: View
             
             TypeFilterView(typeFilter: $typeFilter)
                 .padding([.bottom, .trailing])
-                .padding([.bottom])
+                .padding(.bottom)
         }
     }
 }
