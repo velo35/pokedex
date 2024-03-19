@@ -54,12 +54,10 @@ struct PokedexView: View
                                         selectedEntry = entry
                                         detailShown = true
                                     }
-                                    .matchedGeometryEffect(id: entry.name, in: animation)
-                                    .id(entry)
                                     .sheet(isPresented: $detailShown) {
                                         selectedEntry = nil
                                     } content: {
-                                        PokemonDetailView(pokemon: pokemon, selectedEntry: $selectedEntry)
+                                        PokemonDetailView(selectedEntry: $selectedEntry)
                                     }
                             }
                             else {

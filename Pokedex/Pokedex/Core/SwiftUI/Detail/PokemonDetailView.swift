@@ -22,16 +22,72 @@ fileprivate extension CoordinateSpace
 struct PokemonDetailView: View 
 {
     let viewModel = PokedexViewModel.shared
-    
-//    @State var flavorText = ""
-    @State var pokemon: Pokemon
+
     @Binding var selectedEntry: PokemonEntry?
-    
     @State private var backgroundColor = Color.clear
+    //    @State var flavorText = ""
+    
+    private var pokemon: Pokemon
+    {
+        self.viewModel.pokemonCache[selectedEntry!]!
+    }
+    
+    private var heroImageScrollView: some View
+    {
+        ScrollView(.horizontal) {
+            HStack(spacing: 0) {
+                ForEach(viewModel.pokemonEntries) { entry in
+                    VStack {
+                        if let pokemon = viewModel.pokemonCache[entry] {
+                            HeroImageView(pokemon: pokemon)
+                        }
+                    }
+                    .containerRelativeFrame(.horizontal)
+                    .padding(.bottom, 390)
+                }
+            }
+            .scrollTargetLayout()
+            .background {
+                GeometryReader { proxy in
+                    Color.clear
+                        .preference(
+                            key: ScrollViewContentBounds.self,
+                            value: proxy.frame(in: .scrollView)
+                        )
+                }
+            }
+        }
+        .contentMargins(.horizontal, 40, for: .scrollContent)
+        .scrollTargetBehavior(.viewAligned)
+        .scrollIndicators(.hidden)
+        .scrollPosition(id: $selectedEntry, anchor: .center)
+        .coordinateSpace(.scrollView)
+        .onPreferenceChange(ScrollViewContentBounds.self) { frame in
+            let contentOffsetX = -frame.origin.x
+            guard frame.width > 0 && contentOffsetX > 0 && contentOffsetX < frame.size.width else { return }
+            
+            let entriesCount = viewModel.pokemonEntries.count
+            let entryOffset = Double(entriesCount) * contentOffsetX / frame.width
+            let offsetAmount = entryOffset.truncatingRemainder(dividingBy: 1)
+            let firstIndex = Int(entryOffset.rounded(.down))
+            let secondIndex = Int(entryOffset.rounded(.up))
+            guard secondIndex < entriesCount,
+                  let firstPokemon = viewModel.pokemonCache[viewModel.pokemonEntries[firstIndex]],
+                  let secondPokemon = viewModel.pokemonCache[viewModel.pokemonEntries[secondIndex]] else { return }
+            
+            let firstColor = firstPokemon.type.color
+            let secondColor = secondPokemon.type.color
+            
+            backgroundColor = Color(firstColor.lerp(secondColor, offsetAmount).uiColor)
+            
+        }
+    }
     
     var body: some View
     {
         ZStack(alignment: .bottom) {
+            backgroundColor
+            
             VStack {
                 Text(pokemon.name.capitalized)
                     .font(.largeTitle.weight(.medium))
@@ -51,62 +107,7 @@ struct PokemonDetailView: View
             .background(.white)
             .clipShape(.rect(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30)))
             
-            ScrollView(.horizontal) {
-                HStack(spacing: 0) {
-                    ForEach(viewModel.pokemonEntries) { entry in
-                        VStack {
-                            if let pokemon = viewModel.pokemonCache[entry] {
-                                HeroImageView(pokemon: pokemon)
-                            }
-                        }
-                        .containerRelativeFrame(.horizontal)
-                        .padding(.bottom, 390)
-                    }
-                }
-                .scrollTargetLayout()
-                .background {
-                    GeometryReader { proxy in
-                        Color.clear
-                            .preference(
-                                key: ScrollViewContentBounds.self,
-                                value: proxy.frame(in: .scrollView)
-                            )
-                    }
-                }
-            }
-            .contentMargins(.horizontal, 40, for: .scrollContent)
-            .scrollTargetBehavior(.viewAligned)
-            .scrollIndicators(.hidden)
-            .scrollPosition(id: $selectedEntry, anchor: .center)
-            .coordinateSpace(.scrollView)
-            .onPreferenceChange(ScrollViewContentBounds.self) { frame in
-                let contentOffsetX = -frame.origin.x
-                guard frame.width > 0 && contentOffsetX > 0 && contentOffsetX < frame.size.width else { return }
-                
-                let entriesCount = viewModel.pokemonEntries.count
-                let entryOffset = Double(entriesCount) * contentOffsetX / frame.width
-                let offsetAmount = entryOffset.truncatingRemainder(dividingBy: 1)
-                let firstIndex = Int(entryOffset.rounded(.down))
-                let secondIndex = Int(entryOffset.rounded(.up))
-                guard secondIndex < entriesCount,
-                      let firstPokemon = viewModel.pokemonCache[viewModel.pokemonEntries[firstIndex]],
-                      let secondPokemon = viewModel.pokemonCache[viewModel.pokemonEntries[secondIndex]] else { return }
-                
-                let firstColor = firstPokemon.type.color
-                let secondColor = secondPokemon.type.color
-                
-                backgroundColor = Color(firstColor.lerp(secondColor, offsetAmount).uiColor)
-                
-            }
-            .onChange(of: selectedEntry) {
-                guard let selectedEntry, let pokemon = self.viewModel.pokemonCache[selectedEntry] else { return }
-                self.pokemon = pokemon
-            }
-        }
-        .background {
-            backgroundColor
-//            Rectangle()
-//                .fill(pokemon.type.color.gradient)
+            heroImageScrollView
         }
         .task {
         //            print("starting task!")
@@ -116,13 +117,14 @@ struct PokemonDetailView: View
         //            guard let flavor_text = json["flavor_text_entries", 0, "flavor_text"].string else { print("!!! - flavor_text"); return }
         //            flavorText = flavor_text
         }
-
+        .onAppear {
+            backgroundColor = Color(pokemon.type.color.uiColor)
+        }
     }
 }
 
 #Preview {
     StatefulPreviewWrapper(PokemonEntry.bulbasaur) {
-        PokemonDetailView(pokemon: .bulbasaur, selectedEntry: $0)
+        PokemonDetailView(selectedEntry: $0)
     }
-//    PokemonDetailView(pokemon: .bulbasaur, selectedEntry: .constant(.bulbasaur))
 }
