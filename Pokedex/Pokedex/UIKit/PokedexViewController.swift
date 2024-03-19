@@ -44,6 +44,8 @@ class PokedexViewController: UIViewController
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: entry)
         }
         
+        self.collectionView.prefetchDataSource = self
+        
         let supplementaryRegistration = UICollectionView.SupplementaryRegistration<PokedexSupplementaryView>(elementKind: UICollectionView.elementKindSectionFooter) {
             supplementaryView, kind, indexPath in
         }
@@ -120,6 +122,19 @@ class PokedexViewController: UIViewController
     private func updateLoadAll()
     {
         // TODO
+    }
+}
+
+extension PokedexViewController: UICollectionViewDataSourcePrefetching
+{
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) 
+    {
+        for indexPath in indexPaths {
+            let entry = self.viewModel.pokemonEntries[indexPath.item]
+            if let pokemon = self.viewModel.pokemonCache[entry] {
+                PokemonService.shared.image(for: pokemon).loadIfNeeded()
+            }
+        }
     }
 }
 
