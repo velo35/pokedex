@@ -10,9 +10,20 @@ import Siesta
 
 class PokedexCell: UICollectionViewCell
 {
-    var imageResource: Resource?
+    private var imageResource: Resource?
+    private var image: UIImage? {
+        didSet {
+            self.imageView.image = self.image
+            if self.image == nil {
+                self.imageSpinner.startAnimating()
+            }
+            else {
+                self.imageSpinner.stopAnimating()
+            }
+        }
+    }
     
-    let background = {
+    private let background = {
         let background = UIView(frame: CGRect(x: 0, y: 0, width: 180, height: 100))
         background.layer.cornerRadius = 6
         background.layer.shadowOpacity = 0.6
@@ -20,14 +31,14 @@ class PokedexCell: UICollectionViewCell
         return background
     }()
     
-    let name = {
+    private let name = {
         let name = UILabel(frame: CGRect(x: 16, y: 8, width: 100, height: 24))
         name.font = .systemFont(ofSize: 17, weight: .semibold)
         name.textColor = .white
         return name
     }()
     
-    let type = {
+    private let type = {
         let type = UILabel(frame: CGRect(x: 16, y: 42, width: 80, height: 24))
         type.textAlignment = .center
         type.font = .systemFont(ofSize: 15, weight: .bold)
@@ -35,16 +46,16 @@ class PokedexCell: UICollectionViewCell
         return type
     }()
     
-    let typeBackground = {
+    private let typeBackground = {
         let typeBackground = UIView(frame: CGRect(x: 16, y: 42, width: 80, height: 24))
         typeBackground.layer.cornerRadius = 12
         typeBackground.backgroundColor = .white.withAlphaComponent(0.25)
         return typeBackground
     }()
     
-    let image = UIImageView(frame: CGRect(x: 108, y: 32, width: 64, height: 64))
+    private let imageView = UIImageView(frame: CGRect(x: 108, y: 32, width: 64, height: 64))
     
-    let imageSpinner = UIActivityIndicatorView(style: .large)
+    private let imageSpinner = UIActivityIndicatorView(style: .large)
     
     override init(frame: CGRect)
     {
@@ -53,9 +64,10 @@ class PokedexCell: UICollectionViewCell
         self.contentView.addSubview(self.name)
         self.contentView.addSubview(self.typeBackground)
         self.contentView.addSubview(self.type)
-        self.contentView.addSubview(self.image)
+        self.contentView.addSubview(self.imageView)
         self.contentView.addSubview(self.imageSpinner)
         self.imageSpinner.frame = CGRect(x: 108, y: 32, width: 64, height: 64)
+        self.image = nil
     }
     
     override func prepareForReuse() 
@@ -63,7 +75,8 @@ class PokedexCell: UICollectionViewCell
         self.background.backgroundColor = .clear
         self.name.text = ""
         self.type.text = ""
-        self.image.image = nil
+        self.image = nil
+        self.imageResource?.removeObservers(ownedBy: self)
     }
     
     required init?(coder: NSCoder) {
@@ -72,14 +85,11 @@ class PokedexCell: UICollectionViewCell
     
     func configure(with pokemon: Pokemon)
     {
-        self.imageResource?.removeObservers(ownedBy: self)
-        
         self.name.text = pokemon.name.capitalized
         self.background.backgroundColor = pokemon.type.color.uiColor
         self.type.text = pokemon.type.rawValue
         self.imageResource = PokemonService.shared.image(for: pokemon).addObserver(self)
         self.imageResource?.loadIfNeeded()
-        self.imageSpinner.startAnimating()
     }
 }
 
@@ -87,10 +97,7 @@ extension PokedexCell: ResourceObserver
 {
     func resourceChanged(_ resource: Siesta.Resource, event: Siesta.ResourceEvent)
     {
-        if let image: UIImage = resource.typedContent() {
-            self.image.image = image
-            self.imageSpinner.stopAnimating()
-        }
+        self.image = resource.typedContent()
     }
 }
 
