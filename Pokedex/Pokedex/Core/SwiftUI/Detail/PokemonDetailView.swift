@@ -32,6 +32,28 @@ struct PokemonDetailView: View
         self.viewModel.pokemonCache[selectedEntry!]!
     }
     
+    private var detailStatsView: some View
+    {
+        VStack {
+            Text(pokemon.name.capitalized)
+                .font(.largeTitle.weight(.medium))
+            
+            Text(pokemon.type.rawValue.capitalized)
+                .fontWeight(.semibold)
+                .foregroundStyle(.white)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 26)
+                .background(Capsule().fill(Color(pokemon.type.color.uiColor)))
+            
+            DetailStatsView(pokemon: pokemon)
+        }
+        .padding(.horizontal)
+        .padding(.top, 50)
+        .padding(.bottom, 100)
+        .background(.white)
+        .clipShape(.rect(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30)))
+    }
+    
     private var heroImageScrollView: some View
     {
         ScrollView(.horizontal) {
@@ -79,7 +101,6 @@ struct PokemonDetailView: View
             let secondColor = secondPokemon.type.color
             
             backgroundColor = Color(firstColor.lerp(secondColor, offsetAmount).uiColor)
-            
         }
     }
     
@@ -88,24 +109,7 @@ struct PokemonDetailView: View
         ZStack(alignment: .bottom) {
             backgroundColor
             
-            VStack {
-                Text(pokemon.name.capitalized)
-                    .font(.largeTitle.weight(.medium))
-                
-                Text(pokemon.type.rawValue.capitalized)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .padding(.vertical, 10)
-                    .padding(.horizontal, 26)
-                    .background(Capsule().fill(Color(pokemon.type.color.uiColor)))
-                
-                DetailStatsView(pokemon: pokemon)
-            }
-            .padding(.horizontal)
-            .padding(.top, 50)
-            .padding(.bottom, 100)
-            .background(.white)
-            .clipShape(.rect(cornerRadii: RectangleCornerRadii(topLeading: 30, topTrailing: 30)))
+            detailStatsView
             
             heroImageScrollView
         }
