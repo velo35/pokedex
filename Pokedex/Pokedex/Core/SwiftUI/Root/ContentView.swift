@@ -9,18 +9,23 @@ import SwiftUI
 
 struct ContentView: View 
 {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State private var uiMode = UIMode.swiftUI
     
     var body: some View
     {
         NavigationStack {
             SideMenuView {
-                if uiMode == .swiftUI {
-                    PokedexView()
+                Group {
+                    if uiMode == .swiftUI {
+                        PokedexView()
+                    }
+                    else {
+                        PokedexViewControllerView()
+                    }
                 }
-                else {
-                    PokedexViewControllerView()
-                }
+                .background(colorScheme == .light ? Color.white : Color.black)
             } side: {
                 OptionsView()
             }
