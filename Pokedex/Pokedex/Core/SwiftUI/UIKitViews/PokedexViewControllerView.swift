@@ -9,9 +9,11 @@ import SwiftUI
 
 struct PokedexViewControllerView: UIViewControllerRepresentable
 {
+    let selectedCallback: (PokemonEntry) -> Void
+    
     func makeUIViewController(context: Context) -> PokedexViewController
     {
-        PokedexViewController()
+        PokedexViewController(selectedCallback: selectedCallback)
     }
     
     func updateUIViewController(_ uiViewController: PokedexViewController, context: Context) 
@@ -21,5 +23,7 @@ struct PokedexViewControllerView: UIViewControllerRepresentable
 }
 
 #Preview {
-    PokedexViewControllerView()
+    PokedexViewControllerView() { _ in
+        
+    }
 }

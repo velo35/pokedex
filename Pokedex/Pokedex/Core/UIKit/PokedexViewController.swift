@@ -10,8 +10,22 @@ import UIKit
 class PokedexViewController: UIViewController
 {
     let viewModel = PokedexViewModel.shared
+    
+    typealias SelectedCallback = (PokemonEntry) -> Void
+    var selectedCallback: SelectedCallback
+    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, PokemonEntry>!
+    
+    init(selectedCallback: @escaping SelectedCallback)
+    {
+        self.selectedCallback = selectedCallback
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() 
     {        
@@ -30,10 +44,9 @@ class PokedexViewController: UIViewController
         let layout = UICollectionViewCompositionalLayout(section: section)
         
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        self.collectionView.delegate = self
         
-        let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() {
-            [unowned self]
-            cell, indexPath, entry in
+        let cellRegistration = UICollectionView.CellRegistration<PokedexCell, PokemonEntry>() { cell, indexPath, entry in
             if let pokemon = self.viewModel.pokemonCache[entry] {
                 cell.configure(with: pokemon)
             }
@@ -135,6 +148,16 @@ extension PokedexViewController: UICollectionViewDataSourcePrefetching
                 PokemonService.shared.image(for: pokemon).loadIfNeeded()
             }
         }
+    }
+}
+
+extension PokedexViewController: UICollectionViewDelegate
+{
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool
+    {
+        let entry = self.viewModel.pokemonEntries[indexPath.item]
+        self.selectedCallback(entry)
+        return false
     }
 }
 

@@ -11,11 +11,8 @@ struct SwiftPokedexView: View
 {
     let viewModel = PokedexViewModel.shared
     
-    @Namespace var animation
-    
     @State private var selectedEntry: PokemonEntry?
     @State private var typeFilter: PokemonType?
-    
     @State private var detailShown = false
     
     private let gridItems: [GridItem] = [.init(.flexible()), .init(.flexible())]

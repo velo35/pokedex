@@ -22,7 +22,7 @@ struct ContentView: View
                         SwiftPokedexView()
                     }
                     else {
-                        PokedexViewControllerView()
+                        UIKitPokedexView()
                     }
                 }
                 .background(colorScheme == .light ? Color.white : Color.black)
