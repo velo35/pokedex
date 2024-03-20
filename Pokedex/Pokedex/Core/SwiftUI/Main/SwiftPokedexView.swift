@@ -80,7 +80,9 @@ struct SwiftPokedexView: View
                     }
                 }
                 .onChange(of: selectedEntry) {
-                    proxy.scrollTo(selectedEntry, anchor: .center)
+                    if let selectedEntry {
+                        proxy.scrollTo(selectedEntry, anchor: .center)
+                    }
                 }
             }
             

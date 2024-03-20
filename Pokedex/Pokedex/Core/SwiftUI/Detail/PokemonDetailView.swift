@@ -57,7 +57,7 @@ struct PokemonDetailView: View
     private var heroImageScrollView: some View
     {
         ScrollView(.horizontal) {
-            HStack(spacing: 0) {
+            LazyHStack(spacing: 0) {
                 ForEach(viewModel.pokemonEntries) { entry in
                     VStack {
                         if let pokemon = viewModel.pokemonCache[entry] {
