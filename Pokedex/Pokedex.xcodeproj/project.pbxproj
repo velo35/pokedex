@@ -194,6 +194,7 @@
 				BEB94F3D2B7711300029E0FE /* Components */,
 				BE95A0B12B64926C00511CBE /* Detail */,
 				BEB94F3E2B7711500029E0FE /* Main */,
+				BEE3345B2BAB69C50068FD5C /* Options */,
 				BE95A0AF2B64925600511CBE /* Root */,
 				BE95A0B02B64925F00511CBE /* UIKitViews */,
 			);
@@ -266,7 +267,6 @@
 			children = (
 				BE2C59012B32471C00500E55 /* TypeFilterView.swift */,
 				BE47CA9F2B61E13300B887CD /* SideMenuView.swift */,
-				BE021DD92B62E71C0003E00A /* OptionsView.swift */,
 				BE219A872B9A90270051510F /* ScrubbyKnobView.swift */,
 			);
 			path = Components;
@@ -279,6 +279,14 @@
 				BE4FF6DF2B2BD24C00DD2DEC /* SwiftPokedexView.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		BEE3345B2BAB69C50068FD5C /* Options */ = {
+			isa = PBXGroup;
+			children = (
+				BE021DD92B62E71C0003E00A /* OptionsView.swift */,
+			);
+			path = Options;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
