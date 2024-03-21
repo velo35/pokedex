@@ -31,7 +31,12 @@ class PokemonService: Service
         }
         
         configureTransformer("/pokemon/*") { entity -> Pokemon? in
-            Pokemon(from: entity.content)
+            do {
+                return try Pokemon(from: entity.content)
+            } catch {
+                print(error)
+            }
+            return nil
         }
         
 //        SiestaLog.Category.enabled = .all
