@@ -8,9 +8,7 @@ An example Pokedex app for iOS that incorporates the MVVM design pattern and uti
 ![pokedex_scrubby](https://github.com/velo35/pokedex/assets/14321346/9dd41590-7b14-4e73-b5e9-6560bedd217c)  
 
 - Explore detailed information about each Pokémon:  
-  
-- [x] Custom alignment guides
-- [x] iOS 17 ScrollView APIs
 
-- More to come
+- Toggle between SwiftUI and UIKit presentations of the Pokedex:  
+![podedex_uimodes](https://github.com/velo35/pokedex/assets/14321346/09b61e6c-2719-4eb5-bfd3-f4e78ffa1e63)
 
